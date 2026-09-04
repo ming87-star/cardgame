@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "slime"
+enemy_name = "Acid Slime"
+max_hp = 42
+moves = Array[Dictionary]([{
+"move_name": "Corrosive Spit",
+"type": "attack",
+"value": 7
+}, {
+"move_name": "Hunker Down",
+"type": "defend",
+"value": 6
+}, {
+"move_name": "Enrage",
+"type": "buff",
+"value": 2
+}])

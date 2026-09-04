@@ -1,0 +1,19 @@
+# Godot 4 import cache & generated files
+.godot/
+.import/
+export.cfg
+export_presets.cfg
+
+# Exported builds
+android/
+*.apk
+*.aab
+*.pck
+*.exe
+*.dmg
+*.x86_64
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.tmp
