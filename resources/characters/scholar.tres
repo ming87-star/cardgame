@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/character_data.gd" id="1"]
+[ext_resource type="Texture2D" path="res://resources/art/characters/scholar.png" id="2"]
 
 [resource]
 script = ExtResource("1")
+portrait = ExtResource("2")
 id = "scholar"
 display_name = "선비"
 motivation = "장원급제를 위해 한양의 과거시험을 보러 가는 선비. 벼슬길에 오르는 것이 유일한 소망이다."

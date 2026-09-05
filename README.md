@@ -47,6 +47,17 @@ menu. Character unlocks persist across launches (`user://save.json`).
   필사즉생.
 - `resources/enemies/` — 도깨비 (applies Weak), 산적 두목 (buffs/blocks),
   plus the boss stub above.
+- `resources/art/characters/` — each character's portrait (Korean ink-wash
+  style, transparent background), shown on the character select row and as
+  a small in-combat portrait next to the motivation line. Generated via the
+  OpenAI Images API (`gpt-image-2`, high quality, transparent background,
+  600x900 after resizing) with a single shared prompt template so all three
+  match in pose, framing, stroke density, and seal placement — only the
+  headwear/prop/accent-color slot differs per character. Regenerate by
+  re-running the prompt template with a new role-details/accent pair; keep
+  the shared constraints (faceless silhouette, 3/4 standing pose, head at
+  ~15% / feet at ~90% of frame, transparent background, identical seal) so
+  a new character still fits the set.
 - `scripts/autoload/game_manager.gd` — run state, character-unlock chain +
   save/load, scene transitions. Registered as the `GameManager` autoload.
 - `scenes/character_select/`, `scenes/combat/`, `scenes/card/`,
@@ -89,7 +100,9 @@ godot --path .
     fights, not just one on first victory
 - Card rewards after combat + a larger card pool / rarities
 - Korean-capable UI font (see above)
-- Art, SFX, and juice (card play animations, damage numbers, particles)
+- Card illustrations and enemy art in the same ink-wash style as the
+  character portraits
+- SFX and juice (card play animations, damage numbers, particles)
 
 ## Porting to desktop later
 

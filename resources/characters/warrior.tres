@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/character_data.gd" id="1"]
+[ext_resource type="Texture2D" path="res://resources/art/characters/warrior.png" id="2"]
 
 [resource]
 script = ExtResource("1")
+portrait = ExtResource("2")
 id = "warrior"
 display_name = "무사"
 motivation = "몰락한 가문을 다시 세우기 위해 한양의 무과에 응시하려는 무사. 실력으로 증명하는 것만이 살길이다."

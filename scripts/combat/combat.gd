@@ -5,6 +5,7 @@ const CARD_SCENE := preload("res://scenes/card/Card.tscn")
 const MAX_ENERGY := 3
 const HAND_SIZE := 5
 
+@onready var player_portrait: TextureRect = %PlayerPortrait
 @onready var motivation_label: Label = %MotivationLabel
 @onready var enemy_name_label: Label = %EnemyNameLabel
 @onready var enemy_hp_label: Label = %EnemyHPLabel
@@ -48,7 +49,11 @@ func _ready() -> void:
 	enemy_data = GameManager.next_enemy
 	enemy_hp = enemy_data.max_hp
 	enemy_name_label.text = enemy_data.enemy_name
-	motivation_label.text = GameManager.current_character.motivation if GameManager.current_character else ""
+	if GameManager.current_character:
+		motivation_label.text = GameManager.current_character.motivation
+		player_portrait.texture = GameManager.current_character.portrait
+	else:
+		motivation_label.text = ""
 
 	draw_pile = GameManager.deck.duplicate()
 	draw_pile.shuffle()

@@ -14,3 +14,4 @@ class_name CharacterData
 
 @export var starting_hp: int = 70
 @export var starting_deck: Array[String] = []
+@export var portrait: Texture2D = null
