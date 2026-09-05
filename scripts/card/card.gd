@@ -21,5 +21,8 @@ func set_playable(playable: bool) -> void:
 	disabled = not playable
 	modulate.a = 1.0 if playable else 0.5
 
+func set_selected(selected: bool) -> void:
+	modulate = Color(1, 1, 0.55, modulate.a) if selected else Color(1, 1, 1, modulate.a)
+
 func _pressed() -> void:
 	played.emit(self)

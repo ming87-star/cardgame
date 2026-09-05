@@ -29,8 +29,9 @@ run-length system to place it at the end of yet).
 ## What's here
 
 A playable vertical slice: main menu → character select (locked/unlocked)
-→ turn-based combat against one enemy → win (see a clue) / lose → back to
-menu. Character unlocks persist across launches (`user://save.json`).
+→ turn-based combat against 2-3 enemies at once → win (see a clue) / lose
+→ back to menu. Character unlocks persist across launches
+(`user://save.json`).
 
 - `scripts/data/character_data.gd` — `CharacterData` resource: display
   name, motivation, the clue heard on victory, starting HP/deck.
@@ -40,6 +41,22 @@ menu. Character unlocks persist across launches (`user://save.json`).
 - `scripts/data/enemy_data.gd` — `EnemyData` resource with a cyclic move
   pattern (attack / defend / buff / weaken), shown to the player as an
   "intent".
+- `scripts/combat/enemy_instance.gd` — runtime combat state (HP/block/
+  status/move index) for one enemy in the fight; `EnemyData` stays a shared
+  template so two of the same enemy in one encounter don't share state.
+  `game_manager.gd`'s `ENCOUNTER_POOL` picks 2-3 enemies per run.
+- Tapping a damage card with more than one enemy alive prompts the player
+  to tap which enemy to hit (`scripts/combat/enemy_panel.gd` /
+  `scenes/enemy_panel/`); non-damage effects (block/heal/buff) resolve
+  immediately as before.
+- **Each character fights differently, not just a different deck:**
+  - 선비 (Scholar): Weak/Vulnerable from his cards hit every enemy in the
+    fight, not just one — a knowledge-is-leverage, control-the-crowd feel.
+  - 무사 (Warrior): attack cards splash 50% of their damage onto one other
+    enemy — built for melee against a group.
+  - 보부상 (Merchant): keeps half of whatever Block is left over into his
+    next turn instead of losing it all — built to outlast chip damage from
+    several small attackers.
 - `resources/characters/` — scholar, warrior, merchant, each with their own
   starting deck (scholar leans debuff/control, warrior leans aggressive,
   merchant leans balanced/utility).

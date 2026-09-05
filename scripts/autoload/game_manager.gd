@@ -23,9 +23,12 @@ const CHARACTER_PATHS := {
 	"merchant": "res://resources/characters/merchant.tres",
 }
 
-const ENEMY_POOL: Array[String] = [
-	"res://resources/enemies/dokkaebi.tres",
-	"res://resources/enemies/bandit_chief.tres",
+## Each entry is one encounter: 2-3 enemies that fight the player together.
+const ENCOUNTER_POOL: Array[Array] = [
+	["res://resources/enemies/dokkaebi.tres", "res://resources/enemies/bandit_chief.tres"],
+	["res://resources/enemies/bandit_chief.tres", "res://resources/enemies/bandit_chief.tres"],
+	["res://resources/enemies/dokkaebi.tres", "res://resources/enemies/dokkaebi.tres"],
+	["res://resources/enemies/dokkaebi.tres", "res://resources/enemies/dokkaebi.tres", "res://resources/enemies/bandit_chief.tres"],
 ]
 
 var unlocked_characters: Array[String] = [CHARACTER_ORDER[0]]
@@ -34,7 +37,7 @@ var current_character: CharacterData = null
 var player_max_hp: int = 70
 var player_hp: int = 70
 var deck: Array[CardData] = []
-var next_enemy: EnemyData = null
+var next_enemies: Array[EnemyData] = []
 
 func _ready() -> void:
 	_load_progress()
@@ -57,7 +60,9 @@ func start_new_run(character_id: String) -> void:
 	deck.clear()
 	for path in current_character.starting_deck:
 		deck.append(load(path) as CardData)
-	next_enemy = load(ENEMY_POOL.pick_random()) as EnemyData
+	next_enemies.clear()
+	for path in ENCOUNTER_POOL.pick_random():
+		next_enemies.append(load(path) as EnemyData)
 	run_started.emit()
 	get_tree().change_scene_to_file(COMBAT_SCENE)
 

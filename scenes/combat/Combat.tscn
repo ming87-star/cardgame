@@ -49,26 +49,18 @@ vertical_alignment = 1
 autowrap_mode = 2
 text = ""
 
-[node name="EnemyPanel" type="VBoxContainer" parent="Margin/VBox"]
-layout_mode = 2
-
-[node name="EnemyNameLabel" type="Label" parent="Margin/VBox/EnemyPanel"]
+[node name="EnemyRow" type="HBoxContainer" parent="Margin/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
-horizontal_alignment = 1
-text = "Enemy"
+alignment = 1
+theme_override_constants/separation = 14
 
-[node name="EnemyHPLabel" type="Label" parent="Margin/VBox/EnemyPanel"]
+[node name="TargetHintLabel" type="Label" parent="Margin/VBox"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 horizontal_alignment = 1
-text = "HP: 0 / 0"
-
-[node name="IntentLabel" type="Label" parent="Margin/VBox/EnemyPanel"]
-unique_name_in_owner = true
-layout_mode = 2
-horizontal_alignment = 1
-text = "Intent: ???"
+text = "적을 선택하세요"
 
 [node name="Spacer" type="Control" parent="Margin/VBox"]
 layout_mode = 2
