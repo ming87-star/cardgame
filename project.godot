@@ -21,6 +21,10 @@ config/icon="res://icon.svg"
 
 GameManager="*res://scripts/autoload/game_manager.gd"
 
+[gui]
+
+theme/custom_font="res://resources/fonts/Pretendard-Regular.otf"
+
 [display]
 
 window/size/viewport_width=540

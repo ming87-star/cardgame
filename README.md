@@ -84,12 +84,13 @@ Combat implements: energy (3/turn), draw/hand/discard piles with reshuffle,
 block, Vulnerable (+50% damage taken), Weak (-25% damage dealt, now
 inflictable on the player too, by 도깨비), and Strength (flat damage buff).
 
-## Known follow-up: Korean font
+## Korean font
 
-Godot's bundled default UI font doesn't include Hangul glyphs, so Korean
-text may render as blank boxes/tofu until a CJK-capable font (e.g. Noto
-Sans KR, Pretendard) is set as the project's default theme font. Not done
-yet — flagging it before anyone tests on a real device.
+Godot's bundled default UI font has no Hangul glyphs (text renders as blank
+boxes without this). `resources/fonts/Pretendard-Regular.otf` (OFL-1.1,
+license text alongside it) is set as `gui/theme/custom_font` in
+`project.godot`, which applies it project-wide without needing a Theme
+resource on every scene.
 
 ## Requirements
 
@@ -116,7 +117,6 @@ godot --path .
   - Sequenced storytelling: more clues per character across multiple
     fights, not just one on first victory
 - Card rewards after combat + a larger card pool / rarities
-- Korean-capable UI font (see above)
 - Card illustrations and enemy art in the same ink-wash style as the
   character portraits
 - SFX and juice (card play animations, damage numbers, particles)
