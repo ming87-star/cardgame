@@ -1,13 +1,16 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/combat/enemy_panel.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/ui/HPBar.tscn" id="2"]
+[ext_resource type="Script" path="res://scripts/ui/stat_icon.gd" id="3"]
 
-[node name="EnemyPanelUI" type="Button"]
-custom_minimum_size = Vector2(140, 140)
+[node name="EnemyPanelUI" type="Control"]
+custom_minimum_size = Vector2(150, 160)
 script = ExtResource("1")
 
 [node name="Margin" type="MarginContainer" parent="."]
 mouse_filter = 2
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -18,23 +21,43 @@ theme_override_constants/margin_bottom = 6
 
 [node name="VBox" type="VBoxContainer" parent="Margin"]
 mouse_filter = 2
+layout_mode = 2
+theme_override_constants/separation = 4
 
 [node name="NameLabel" type="Label" parent="Margin/VBox"]
 unique_name_in_owner = true
 mouse_filter = 2
+layout_mode = 2
 horizontal_alignment = 1
+autowrap_mode = 2
 text = "Enemy"
 
-[node name="HPLabel" type="Label" parent="Margin/VBox"]
+[node name="HPBar" parent="Margin/VBox" instance=ExtResource("2")]
 unique_name_in_owner = true
-mouse_filter = 2
-horizontal_alignment = 1
-autowrap_mode = 2
-text = "체력: 0/0"
+layout_mode = 2
 
-[node name="IntentLabel" type="Label" parent="Margin/VBox"]
+[node name="StatusRow" type="HBoxContainer" parent="Margin/VBox"]
 unique_name_in_owner = true
 mouse_filter = 2
-horizontal_alignment = 1
-autowrap_mode = 2
-text = "의도: ???"
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="IntentRow" type="HBoxContainer" parent="Margin/VBox"]
+mouse_filter = 2
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="IntentIcon" type="Control" parent="Margin/VBox/IntentRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(18, 18)
+mouse_filter = 2
+layout_mode = 2
+script = ExtResource("3")
+
+[node name="IntentValueLabel" type="Label" parent="Margin/VBox/IntentRow"]
+unique_name_in_owner = true
+mouse_filter = 2
+layout_mode = 2
+text = "0"

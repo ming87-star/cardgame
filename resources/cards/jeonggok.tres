@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "jeonggok"
+card_name = "정곡(正鵠)"
+description = "시위를 놓아 과녁 정중앙을 꿰뚫는다. 6의 피해를 입힌다."
+cost = 1
+card_type = 0
+target_type = 0
+damage = 6

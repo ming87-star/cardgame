@@ -1,10 +1,6 @@
 extends Button
 class_name CardUI
 
-## Fired when the player taps the card. Combat.gd listens and decides
-## whether/how to play it.
-signal played(card_ui: CardUI)
-
 var card_data: CardData
 
 @onready var cost_label: Label = %CostLabel
@@ -21,8 +17,16 @@ func set_playable(playable: bool) -> void:
 	disabled = not playable
 	modulate.a = 1.0 if playable else 0.5
 
-func set_selected(selected: bool) -> void:
-	modulate = Color(1, 1, 0.55, modulate.a) if selected else Color(1, 1, 1, modulate.a)
-
-func _pressed() -> void:
-	played.emit(self)
+## Dragging is the only way to play a card now: drop it on an enemy panel
+## to target damage, or anywhere in the battlefield for a self/buff card.
+## Returning null here (e.g. when unaffordable) simply means the card
+## doesn't pick up -- no partial/ambiguous play state to get stuck in.
+func _get_drag_data(_at_position: Vector2) -> Variant:
+	if disabled or card_data == null:
+		return null
+	var preview: CardUI = duplicate()
+	preview.modulate.a = 0.88
+	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	preview.position = -size * 0.5
+	set_drag_preview(preview)
+	return {"card_ui": self}

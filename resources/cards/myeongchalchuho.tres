@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "myeongchalchuho"
+card_name = "명찰추호(明察秋毫)"
+description = "가을 터럭 끝까지 살피는 눈으로 적의 허점을 꿰뚫어본다. 2턴간 약화를 부여한다."
+cost = 1
+card_type = 1
+target_type = 0
+apply_weak = 2

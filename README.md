@@ -28,9 +28,10 @@ run-length system to place it at the end of yet).
 
 ## What's here
 
-A playable vertical slice: main menu → character select (locked/unlocked)
-→ turn-based combat against 2-3 enemies at once → win (see a clue) / lose
-→ back to menu. Character unlocks persist across launches
+A playable vertical slice: main menu → character select (locked/unlocked,
+motivation shown here only) → turn-based combat against 2-3 enemies at once
+→ win (see a clue) / lose → back to menu. Landscape is the default
+orientation (960x540). Character unlocks persist across launches
 (`user://save.json`).
 
 - `scripts/data/character_data.gd` — `CharacterData` resource: display
@@ -45,10 +46,21 @@ A playable vertical slice: main menu → character select (locked/unlocked)
   status/move index) for one enemy in the fight; `EnemyData` stays a shared
   template so two of the same enemy in one encounter don't share state.
   `game_manager.gd`'s `ENCOUNTER_POOL` picks 2-3 enemies per run.
-- Tapping a damage card with more than one enemy alive prompts the player
-  to tap which enemy to hit (`scripts/combat/enemy_panel.gd` /
-  `scenes/enemy_panel/`); non-damage effects (block/heal/buff) resolve
-  immediately as before.
+- **Cards are played by dragging, not tapping.** `CardUI._get_drag_data`
+  starts a drag; drop it on a specific `EnemyPanelUI` to target that enemy,
+  or drop it anywhere else in the fight for a self/buff card (or a damage
+  card when only one enemy is left). `Combat._can_drop_data`/`_drop_data`
+  is the generic fallback -- every purely decorative container in between
+  has to stay `mouse_filter = IGNORE` or it swallows the drop before it
+  gets there. A drop that doesn't resolve (no target chosen while 2+
+  enemies are alive, not enough energy) just leaves the card in hand;
+  there's no intermediate "armed" state left over to get stuck in, which
+  is what caused cards to vanish under the old tap-to-target flow.
+- **Stats read as gauges/icons, not sentences.** `HPBar` (a `ProgressBar` +
+  label) for HP/energy; `StatIcon` (`scripts/ui/stat_icon.gd`) draws small
+  flat vector icons -- shield/chevron-down/chevron-up/burst/crossed-blade --
+  for block, weak, vulnerable, strength, and enemy intent, so no image
+  assets were needed for this pass.
 - **Each character fights differently, not just a different deck:**
   - 선비 (Scholar): Weak/Vulnerable from his cards hit every enemy in the
     fight, not just one — a knowledge-is-leverage, control-the-crowd feel.
@@ -58,18 +70,24 @@ A playable vertical slice: main menu → character select (locked/unlocked)
     next turn instead of losing it all — built to outlast chip damage from
     several small attackers.
 - `resources/characters/` — scholar, warrior, merchant, each with their own
-  starting deck (scholar leans debuff/control, warrior leans aggressive,
-  merchant leans balanced/utility).
-- `resources/cards/` — 베기, 방어 자세, 일도양단, 반격 자세, 기합, 부적,
-  필사즉생.
+  starting deck and its own card set/theme (see below), not just numbers.
+- `resources/cards/` — 무사/보부상 share 베기, 방어 자세, 일도양단, 반격
+  자세, 기합. 선비 has his own archery-themed set instead of reusing those:
+  정곡(正鵠)/관혁(貫革)/부동심(不動心)/호연지기(浩然之氣)/명찰추호(明察秋毫)/
+  반구저기(反求諸己), each named after an actual Analects/Mencius line about
+  archery or self-cultivation — 활쏘기(archery) was one of the Six Arts
+  (六藝) a Confucian scholar was expected to know, so a bow (not a sword)
+  is his weapon. His portrait still shows a folding fan, not a bow — that
+  regeneration is still pending, tracked in the roadmap below.
 - `resources/enemies/` — 도깨비 (applies Weak), 산적 두목 (buffs/blocks),
   plus the boss stub above.
 - `resources/art/characters/` — each character's portrait (Korean ink-wash
   style, transparent background), shown on the character select row and as
-  a small in-combat portrait next to the motivation line. Generated via the
-  OpenAI Images API (`gpt-image-2`, high quality, transparent background,
-  600x900 after resizing) with a single shared prompt template so all three
-  match in pose, framing, stroke density, and seal placement — only the
+  a small in-combat HUD icon (no description text in combat -- that only
+  shows on the select screen now). Generated via the OpenAI Images API
+  (`gpt-image-2`, high quality, transparent background, 600x900 after
+  resizing) with a single shared prompt template so all three match in
+  pose, framing, stroke density, and seal placement — only the
   headwear/prop/accent-color slot differs per character. Regenerate by
   re-running the prompt template with a new role-details/accent pair; keep
   the shared constraints (faceless silhouette, 3/4 standing pose, head at
@@ -113,10 +131,18 @@ godot --path .
 
 - Node-map run structure (branching path, elites, rest sites, shops) so a
   run has more than one fight — this is also where the final boss
-  (`hanyang_calamity.tres`) gets placed at the end of the road
+  (`hanyang_calamity.tres`) gets placed at the end of the road.
+  Recommendation when this gets built: don't just add lots of nodes and
+  drop enemy HP everywhere -- the per-character passives above need a
+  fight to run 3-5 turns to actually show up, so a fight-in-one-turn map
+  would flatten them out. Keep normal fights roughly at today's HP, add
+  a distinct "elite" (harder, longer) encounter type, and vary node
+  density/composition rather than uniformly lowering difficulty.
   - Sequenced storytelling: more clues per character across multiple
     fights, not just one on first victory
 - Card rewards after combat + a larger card pool / rarities
+- Scholar portrait regeneration (bow instead of the fan, to match his new
+  archery kit)
 - Card illustrations and enemy art in the same ink-wash style as the
   character portraits
 - SFX and juice (card play animations, damage numbers, particles)

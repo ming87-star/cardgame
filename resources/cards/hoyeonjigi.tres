@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "hoyeonjigi"
+card_name = "호연지기(浩然之氣)"
+description = "천지에 가득한 크고 굳센 기운을 기른다. 힘 3을 얻는다."
+cost = 1
+card_type = 2
+target_type = 1
+apply_strength = 3

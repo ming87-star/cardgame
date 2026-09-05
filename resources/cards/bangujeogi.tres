@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "bangujeogi"
+card_name = "반구저기(反求諸己)"
+description = "잘못의 원인을 자신에게서 찾는다. 체력 3을 회복하고 방어도 3을 얻는다."
+cost = 1
+card_type = 1
+target_type = 1
+heal = 3
+block = 3

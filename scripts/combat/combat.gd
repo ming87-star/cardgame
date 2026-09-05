@@ -7,11 +7,10 @@ const MAX_ENERGY := 3
 const HAND_SIZE := 5
 
 @onready var player_portrait: TextureRect = %PlayerPortrait
-@onready var motivation_label: Label = %MotivationLabel
+@onready var player_hp_bar: HPBar = %PlayerHPBar
+@onready var energy_bar: HPBar = %EnergyBar
+@onready var player_status_row: HBoxContainer = %PlayerStatusRow
 @onready var enemy_row: HBoxContainer = %EnemyRow
-@onready var target_hint_label: Label = %TargetHintLabel
-@onready var player_hp_label: Label = %PlayerHPLabel
-@onready var energy_label: Label = %EnergyLabel
 @onready var draw_count_label: Label = %DrawCountLabel
 @onready var discard_count_label: Label = %DiscardCountLabel
 @onready var hand_container: HBoxContainer = %HandContainer
@@ -37,9 +36,6 @@ var draw_pile: Array[CardData] = []
 var discard_pile: Array[CardData] = []
 var hand: Array[CardUI] = []
 
-## The card waiting for the player to tap an enemy to target, or null.
-var pending_card: CardUI = null
-
 var combat_over: bool = false
 var combat_victory: bool = false
 
@@ -48,18 +44,16 @@ func _ready() -> void:
 	player_hp = GameManager.player_hp
 	character_id = GameManager.current_character.id if GameManager.current_character else ""
 
+	player_hp_bar.set_fill_color(Color(0.4, 0.68, 0.42))
+	energy_bar.set_fill_color(Color(0.4, 0.55, 0.85))
 	if GameManager.current_character:
-		motivation_label.text = GameManager.current_character.motivation
 		player_portrait.texture = GameManager.current_character.portrait
-	else:
-		motivation_label.text = ""
 
 	_spawn_enemies()
 
 	draw_pile = GameManager.deck.duplicate()
 	draw_pile.shuffle()
 
-	target_hint_label.hide()
 	result_panel.hide()
 	end_turn_button.pressed.connect(_on_end_turn_pressed)
 	result_button.pressed.connect(_on_result_button_pressed)
@@ -84,8 +78,8 @@ func _spawn_enemies() -> void:
 
 		var panel: EnemyPanelUI = ENEMY_PANEL_SCENE.instantiate()
 		enemy_row.add_child(panel)
+		panel.combat = self
 		panel.set_enemy(instance)
-		panel.targeted.connect(_on_enemy_targeted)
 		enemy_panels.append(panel)
 
 func start_player_turn() -> void:
@@ -112,54 +106,32 @@ func _add_card_to_hand(data: CardData) -> void:
 	var card_ui: CardUI = CARD_SCENE.instantiate()
 	hand_container.add_child(card_ui)
 	card_ui.set_card(data)
-	card_ui.played.connect(_on_card_played)
 	hand.append(card_ui)
 
-func _on_card_played(card_ui: CardUI) -> void:
-	if combat_over:
-		return
+## Called by EnemyPanelUI._drop_data (preferred_target set) and by this
+## Control's own _drop_data (preferred_target null, generic battlefield
+## drop). Returns false without side effects when the play isn't valid --
+## a rejected drop just leaves the card in hand, nothing to undo.
+func try_play_card(card_ui: CardUI, preferred_target: EnemyInstance) -> bool:
+	if combat_over or not hand.has(card_ui):
+		return false
 	var data: CardData = card_ui.card_data
 	if energy < data.cost:
-		return
+		return false
 
-	if card_ui == pending_card:
-		_clear_pending_target()
-		return
+	var target: EnemyInstance = null
+	if data.target_type == CardData.TargetType.ENEMY:
+		if preferred_target and preferred_target.is_alive():
+			target = preferred_target
+		elif data.damage > 0 and _alive_enemy_count() > 1:
+			return false # ambiguous -- needs a specific enemy dropped on
+		else:
+			target = _first_alive_enemy()
+			if target == null:
+				return false
 
-	# Only damage needs the player to pick a specific enemy -- every current
-	# non-damage enemy-effect card (Talisman) is the scholar's group-wide
-	# debuff, where the choice of target wouldn't change anything anyway.
-	if data.target_type == CardData.TargetType.ENEMY and data.damage > 0 and _alive_enemy_count() > 1:
-		_begin_targeting(card_ui)
-		return
-
-	var target: EnemyInstance = _first_alive_enemy() if data.target_type == CardData.TargetType.ENEMY else null
 	_resolve_card(card_ui, target)
-
-func _begin_targeting(card_ui: CardUI) -> void:
-	pending_card = card_ui
-	card_ui.set_selected(true)
-	target_hint_label.show()
-	for i in enemies.size():
-		enemy_panels[i].set_targetable(enemies[i].is_alive())
-
-func _clear_pending_target() -> void:
-	if pending_card:
-		pending_card.set_selected(false)
-	pending_card = null
-	target_hint_label.hide()
-	for panel in enemy_panels:
-		panel.set_targetable(false)
-
-func _on_enemy_targeted(panel: EnemyPanelUI) -> void:
-	if pending_card == null:
-		return
-	var idx: int = enemy_panels.find(panel)
-	if idx == -1 or not enemies[idx].is_alive():
-		return
-	var card_ui: CardUI = pending_card
-	_clear_pending_target()
-	_resolve_card(card_ui, enemies[idx])
+	return true
 
 func _resolve_card(card_ui: CardUI, target: EnemyInstance) -> void:
 	var data: CardData = card_ui.card_data
@@ -234,7 +206,6 @@ func _deal_damage_to_player(acting_enemy: EnemyInstance, base_damage: int) -> vo
 func _on_end_turn_pressed() -> void:
 	if combat_over:
 		return
-	_clear_pending_target()
 	_discard_hand()
 	_do_enemy_turn()
 
@@ -296,7 +267,6 @@ func _show_result(victory: bool) -> void:
 	combat_victory = victory
 	GameManager.player_hp = player_hp
 	end_turn_button.disabled = true
-	_clear_pending_target()
 	result_label.text = "승리!" if victory else "패배..."
 	if victory and GameManager.current_character:
 		clue_label.text = GameManager.current_character.clue_text
@@ -309,15 +279,29 @@ func _on_result_button_pressed() -> void:
 	GameManager.end_run(combat_victory)
 
 func update_all_ui() -> void:
-	player_hp_label.text = "체력: %d / %d%s%s" % [
-		max(player_hp, 0), player_max_hp,
-		("  (방어 %d)" % player_block) if player_block > 0 else "",
-		("  (약화 %d)" % player_weak) if player_weak > 0 else ""
-	]
-	energy_label.text = "기력: %d / %d" % [energy, MAX_ENERGY]
-	draw_count_label.text = "덱: %d" % draw_pile.size()
-	discard_count_label.text = "버림패: %d" % discard_pile.size()
+	player_hp_bar.set_values(player_hp, player_max_hp)
+	energy_bar.set_values(energy, MAX_ENERGY)
+	draw_count_label.text = "덱 %d" % draw_pile.size()
+	discard_count_label.text = "버림패 %d" % discard_pile.size()
+
+	StatusBadges.build(player_status_row, [
+		[StatIcon.Kind.BLOCK, player_block, Color(0.55, 0.75, 0.95)],
+		[StatIcon.Kind.WEAK, player_weak, Color(0.75, 0.6, 0.9)],
+		[StatIcon.Kind.STRENGTH, player_strength, Color(0.95, 0.75, 0.35)],
+	])
+
 	for panel in enemy_panels:
 		panel.update_display()
 	for card_ui in hand:
 		card_ui.set_playable(card_ui.card_data.cost <= energy)
+
+## Generic battlefield drop target: catches drops that land outside any
+## specific enemy panel (self/buff cards, or a damage card when only one
+## enemy is alive). Every purely decorative container between this root
+## and the enemy panels/hand cards must stay mouse_filter = IGNORE so the
+## search actually reaches whichever of the two should handle it.
+func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+	return data is Dictionary and data.has("card_ui")
+
+func _drop_data(_at_position: Vector2, data: Variant) -> void:
+	try_play_card(data["card_ui"], null)

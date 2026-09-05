@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "gwanhyeok"
+card_name = "관혁(貫革)"
+description = "가죽 과녁을 꿰뚫는 강궁. 8의 피해를 입히고 2턴간 취약을 부여한다."
+cost = 2
+card_type = 0
+target_type = 0
+damage = 8
+apply_vulnerable = 2

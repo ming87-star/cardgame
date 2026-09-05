@@ -11,4 +11,4 @@ display_name = "선비"
 motivation = "장원급제를 위해 한양의 과거시험을 보러 가는 선비. 벼슬길에 오르는 것이 유일한 소망이다."
 clue_text = "듣자하니 최근 한양의 사관들이 하나둘 실종되고 있다더군. 궁 안에서는 쉬쉬하고 있다는데..."
 starting_hp = 65
-starting_deck = Array[String](["res://resources/cards/strike.tres", "res://resources/cards/strike.tres", "res://resources/cards/strike.tres", "res://resources/cards/strike.tres", "res://resources/cards/defend.tres", "res://resources/cards/defend.tres", "res://resources/cards/defend.tres", "res://resources/cards/talisman.tres", "res://resources/cards/talisman.tres", "res://resources/cards/resolve.tres"])
+starting_deck = Array[String](["res://resources/cards/jeonggok.tres", "res://resources/cards/jeonggok.tres", "res://resources/cards/jeonggok.tres", "res://resources/cards/jeonggok.tres", "res://resources/cards/budongsim.tres", "res://resources/cards/budongsim.tres", "res://resources/cards/budongsim.tres", "res://resources/cards/myeongchalchuho.tres", "res://resources/cards/myeongchalchuho.tres", "res://resources/cards/bangujeogi.tres"])
