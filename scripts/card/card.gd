@@ -5,12 +5,15 @@ var card_data: CardData
 
 @onready var cost_label: Label = %CostLabel
 @onready var name_label: Label = %NameLabel
+@onready var art_rect: TextureRect = %ArtRect
 @onready var desc_label: Label = %DescLabel
 
 func set_card(data: CardData) -> void:
 	card_data = data
 	cost_label.text = str(data.cost)
 	name_label.text = data.card_name
+	art_rect.texture = data.art
+	art_rect.visible = data.art != null
 	desc_label.text = data.get_display_description()
 
 func set_playable(playable: bool) -> void:

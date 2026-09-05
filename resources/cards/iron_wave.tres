@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="CardData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/card_data.gd" id="1"]
+[ext_resource type="Texture2D" path="res://resources/art/cards/iron_wave.png" id="2"]
 
 [resource]
 script = ExtResource("1")
+art = ExtResource("2")
 id = "iron_wave"
 card_name = "반격 자세"
 description = "공격과 방어를 동시에. 5의 피해를 입히고 방어도 5를 얻는다."

@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="CardData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/card_data.gd" id="1"]
+[ext_resource type="Texture2D" path="res://resources/art/cards/myeongchalchuho.png" id="2"]
 
 [resource]
 script = ExtResource("1")
+art = ExtResource("2")
 id = "myeongchalchuho"
 card_name = "명찰추호(明察秋毫)"
 description = "가을 터럭 끝까지 살피는 눈으로 적의 허점을 꿰뚫어본다. 2턴간 약화를 부여한다."

@@ -10,6 +10,7 @@ enum TargetType { ENEMY, SELF, NONE }
 @export var cost: int = 1
 @export var card_type: CardType = CardType.ATTACK
 @export var target_type: TargetType = TargetType.ENEMY
+@export var art: Texture2D = null
 
 ## Core numbers. Not every card uses every field.
 @export var damage: int = 0

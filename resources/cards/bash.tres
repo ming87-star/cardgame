@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="CardData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/card_data.gd" id="1"]
+[ext_resource type="Texture2D" path="res://resources/art/cards/bash.png" id="2"]
 
 [resource]
 script = ExtResource("1")
+art = ExtResource("2")
 id = "bash"
 card_name = "일도양단"
 description = "온 힘을 실어 내려친다. 8의 피해를 입히고 2턴간 취약을 부여한다."
