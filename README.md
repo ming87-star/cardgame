@@ -77,8 +77,11 @@ orientation (960x540). Character unlocks persist across launches
   반구저기(反求諸己), each named after an actual Analects/Mencius line about
   archery or self-cultivation — 활쏘기(archery) was one of the Six Arts
   (六藝) a Confucian scholar was expected to know, so a bow (not a sword)
-  is his weapon. His portrait still shows a folding fan, not a bow — that
-  regeneration is still pending, tracked in the roadmap below.
+  is his weapon, and his portrait now draws one instead of holding a fan.
+  Each also has small square card art (`resources/art/cards/`, 400x400,
+  transparent) generated the same way; shared cards use a neutral warm
+  ink-red wash since no one class owns them, 선비's own cards use his
+  indigo.
 - `resources/enemies/` — 도깨비 (applies Weak), 산적 두목 (buffs/blocks),
   plus the boss stub above.
 - `resources/art/characters/` — each character's portrait (Korean ink-wash
@@ -88,11 +91,14 @@ orientation (960x540). Character unlocks persist across launches
   (`gpt-image-2`, high quality, transparent background, 600x900 after
   resizing) with a single shared prompt template so all three match in
   pose, framing, stroke density, and seal placement — only the
-  headwear/prop/accent-color slot differs per character. Regenerate by
-  re-running the prompt template with a new role-details/accent pair; keep
-  the shared constraints (faceless silhouette, 3/4 standing pose, head at
-  ~15% / feet at ~90% of frame, transparent background, identical seal) so
-  a new character still fits the set.
+  headwear/prop/accent-color slot differs per character. Facing direction
+  matters here: Combat puts the player panel on the left and enemies on
+  the right, so the portraits face right (not showing their back to the
+  fight) rather than the left-facing first draft. Regenerate by re-running
+  the prompt template with a new role-details/accent pair; keep the shared
+  constraints (faceless silhouette, 3/4 standing pose facing right, head
+  at ~15% / feet at ~90% of frame, transparent background, identical seal)
+  so a new character still fits the set.
 - `scripts/autoload/game_manager.gd` — run state, character-unlock chain +
   save/load, scene transitions. Registered as the `GameManager` autoload.
 - `scenes/character_select/`, `scenes/combat/`, `scenes/card/`,
@@ -141,10 +147,7 @@ godot --path .
   - Sequenced storytelling: more clues per character across multiple
     fights, not just one on first victory
 - Card rewards after combat + a larger card pool / rarities
-- Scholar portrait regeneration (bow instead of the fan, to match his new
-  archery kit)
-- Card illustrations and enemy art in the same ink-wash style as the
-  character portraits
+- Enemy art in the same ink-wash style as the character portraits and cards
 - SFX and juice (card play animations, damage numbers, particles)
 
 ## Porting to desktop later
