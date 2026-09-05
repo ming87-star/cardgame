@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/character_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "merchant"
+display_name = "보부상"
+motivation = "빚을 갚기 위해 한양 저잣거리에 물건을 대러 가는 보부상. 장사가 잘 풀려야 목숨을 부지한다."
+clue_text = "장사치들 사이에 도는 말로는, 한양 성벽 아래 창고에서 사람이 사라진다더군. 다들 그 얘긴 입 밖에 안 내려 하지만."
+starting_hp = 70
+starting_deck = Array[String](["res://resources/cards/strike.tres", "res://resources/cards/strike.tres", "res://resources/cards/strike.tres", "res://resources/cards/strike.tres", "res://resources/cards/defend.tres", "res://resources/cards/defend.tres", "res://resources/cards/defend.tres", "res://resources/cards/iron_wave.tres", "res://resources/cards/resolve.tres"])

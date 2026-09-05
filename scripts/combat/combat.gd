@@ -5,6 +5,7 @@ const CARD_SCENE := preload("res://scenes/card/Card.tscn")
 const MAX_ENERGY := 3
 const HAND_SIZE := 5
 
+@onready var motivation_label: Label = %MotivationLabel
 @onready var enemy_name_label: Label = %EnemyNameLabel
 @onready var enemy_hp_label: Label = %EnemyHPLabel
 @onready var intent_label: Label = %IntentLabel
@@ -17,11 +18,13 @@ const HAND_SIZE := 5
 @onready var result_panel: Control = %ResultPanel
 @onready var result_label: Label = %ResultLabel
 @onready var result_button: Button = %ResultButton
+@onready var clue_label: Label = %ClueLabel
 
 var player_hp: int
 var player_max_hp: int
 var player_block: int = 0
 var player_strength: int = 0
+var player_weak: int = 0
 var energy: int = 0
 
 var enemy_data: EnemyData
@@ -45,6 +48,7 @@ func _ready() -> void:
 	enemy_data = GameManager.next_enemy
 	enemy_hp = enemy_data.max_hp
 	enemy_name_label.text = enemy_data.enemy_name
+	motivation_label.text = GameManager.current_character.motivation if GameManager.current_character else ""
 
 	draw_pile = GameManager.deck.duplicate()
 	draw_pile.shuffle()
@@ -58,6 +62,8 @@ func _ready() -> void:
 func start_player_turn() -> void:
 	player_block = 0
 	energy = MAX_ENERGY
+	if player_weak > 0:
+		player_weak -= 1
 	draw_cards(HAND_SIZE)
 	update_all_ui()
 
@@ -112,6 +118,8 @@ func _apply_card(data: CardData) -> void:
 
 func _deal_damage_to_enemy(base_damage: int) -> void:
 	var dmg: int = base_damage + player_strength
+	if player_weak > 0:
+		dmg = int(floor(dmg * 0.75))
 	if enemy_vulnerable > 0:
 		dmg = int(floor(dmg * 1.5))
 	var remaining: int = dmg
@@ -154,6 +162,8 @@ func _do_enemy_turn() -> void:
 			enemy_block += int(move.get("value", 0))
 		EnemyData.MOVE_TYPE_BUFF:
 			enemy_strength += int(move.get("value", 0))
+		EnemyData.MOVE_TYPE_WEAKEN:
+			player_weak += int(move.get("value", 0))
 	enemy_move_index += 1
 
 	if enemy_weak > 0:
@@ -177,25 +187,31 @@ func _show_result(victory: bool) -> void:
 	combat_victory = victory
 	GameManager.player_hp = player_hp
 	end_turn_button.disabled = true
-	result_label.text = "Victory!" if victory else "Defeated..."
+	result_label.text = "승리!" if victory else "패배..."
+	if victory and GameManager.current_character:
+		clue_label.text = GameManager.current_character.clue_text
+		clue_label.show()
+	else:
+		clue_label.hide()
 	result_panel.show()
 
 func _on_result_button_pressed() -> void:
 	GameManager.end_run(combat_victory)
 
 func update_all_ui() -> void:
-	enemy_hp_label.text = "HP: %d / %d%s" % [
+	enemy_hp_label.text = "체력: %d / %d%s" % [
 		max(enemy_hp, 0), enemy_data.max_hp,
-		("  (Block %d)" % enemy_block) if enemy_block > 0 else ""
+		("  (방어 %d)" % enemy_block) if enemy_block > 0 else ""
 	]
 	intent_label.text = _get_intent_text()
-	player_hp_label.text = "HP: %d / %d%s" % [
+	player_hp_label.text = "체력: %d / %d%s%s" % [
 		max(player_hp, 0), player_max_hp,
-		("  (Block %d)" % player_block) if player_block > 0 else ""
+		("  (방어 %d)" % player_block) if player_block > 0 else "",
+		("  (약화 %d)" % player_weak) if player_weak > 0 else ""
 	]
-	energy_label.text = "Energy: %d / %d" % [energy, MAX_ENERGY]
-	draw_count_label.text = "Draw: %d" % draw_pile.size()
-	discard_count_label.text = "Discard: %d" % discard_pile.size()
+	energy_label.text = "기력: %d / %d" % [energy, MAX_ENERGY]
+	draw_count_label.text = "덱: %d" % draw_pile.size()
+	discard_count_label.text = "버림패: %d" % discard_pile.size()
 	for card_ui in hand:
 		card_ui.set_playable(card_ui.card_data.cost <= energy)
 
@@ -204,10 +220,12 @@ func _get_intent_text() -> String:
 	var move_name: String = move.get("move_name", "???")
 	match move.get("type", ""):
 		EnemyData.MOVE_TYPE_ATTACK:
-			return "Intent: %s — Attack %d" % [move_name, int(move.get("value", 0)) + enemy_strength]
+			return "의도: %s — 공격 %d" % [move_name, int(move.get("value", 0)) + enemy_strength]
 		EnemyData.MOVE_TYPE_DEFEND:
-			return "Intent: %s — Defend %d" % [move_name, int(move.get("value", 0))]
+			return "의도: %s — 방어 %d" % [move_name, int(move.get("value", 0))]
 		EnemyData.MOVE_TYPE_BUFF:
-			return "Intent: %s — Buff" % move_name
+			return "의도: %s — 강화" % move_name
+		EnemyData.MOVE_TYPE_WEAKEN:
+			return "의도: %s — 약화 부여" % move_name
 		_:
-			return "Intent: %s" % move_name
+			return "의도: %s" % move_name

@@ -30,6 +30,13 @@ theme_override_constants/margin_bottom = 20
 layout_mode = 2
 theme_override_constants/separation = 16
 
+[node name="MotivationLabel" type="Label" parent="Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 2
+text = ""
+
 [node name="EnemyPanel" type="VBoxContainer" parent="Margin/VBox"]
 layout_mode = 2
 
@@ -95,7 +102,7 @@ theme_override_constants/separation = 10
 [node name="EndTurnButton" type="Button" parent="Margin/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "End Turn"
+text = "턴 종료"
 
 [node name="ResultPanel" type="ColorRect" parent="."]
 unique_name_in_owner = true
@@ -121,9 +128,18 @@ theme_override_constants/separation = 20
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 1
-text = "Victory!"
+text = "승리!"
+
+[node name="ClueLabel" type="Label" parent="ResultPanel/CenterBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 2
+custom_minimum_size = Vector2(400, 0)
+text = ""
 
 [node name="ResultButton" type="Button" parent="ResultPanel/CenterBox"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Return to Menu"
+text = "메뉴로 돌아가기"

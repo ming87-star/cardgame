@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "dokkaebi"
+enemy_name = "도깨비"
+max_hp = 40
+moves = Array[Dictionary]([{
+"move_name": "도깨비불",
+"type": "attack",
+"value": 7
+}, {
+"move_name": "홀리기",
+"type": "weaken",
+"value": 2
+}, {
+"move_name": "방망이 강타",
+"type": "attack",
+"value": 11
+}])

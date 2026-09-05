@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/character_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "scholar"
+display_name = "선비"
+motivation = "장원급제를 위해 한양의 과거시험을 보러 가는 선비. 벼슬길에 오르는 것이 유일한 소망이다."
+clue_text = "듣자하니 최근 한양의 사관들이 하나둘 실종되고 있다더군. 궁 안에서는 쉬쉬하고 있다는데..."
+starting_hp = 65
+starting_deck = Array[String](["res://resources/cards/strike.tres", "res://resources/cards/strike.tres", "res://resources/cards/strike.tres", "res://resources/cards/strike.tres", "res://resources/cards/defend.tres", "res://resources/cards/defend.tres", "res://resources/cards/defend.tres", "res://resources/cards/talisman.tres", "res://resources/cards/talisman.tres", "res://resources/cards/resolve.tres"])

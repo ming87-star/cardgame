@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/character_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "warrior"
+display_name = "무사"
+motivation = "몰락한 가문을 다시 세우기 위해 한양의 무과에 응시하려는 무사. 실력으로 증명하는 것만이 살길이다."
+clue_text = "저잣거리에서 들은 얘긴데, 밤마다 도성 아래에서 땅이 울린다고 하네. 병사들도 쉬쉬 대며 순찰만 돌 뿐이야."
+starting_hp = 75
+starting_deck = Array[String](["res://resources/cards/strike.tres", "res://resources/cards/strike.tres", "res://resources/cards/strike.tres", "res://resources/cards/strike.tres", "res://resources/cards/strike.tres", "res://resources/cards/defend.tres", "res://resources/cards/defend.tres", "res://resources/cards/defend.tres", "res://resources/cards/bash.tres", "res://resources/cards/inflame.tres"])

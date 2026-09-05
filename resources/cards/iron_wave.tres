@@ -5,7 +5,8 @@
 [resource]
 script = ExtResource("1")
 id = "iron_wave"
-card_name = "Iron Wave"
+card_name = "반격 자세"
+description = "공격과 방어를 동시에. 5의 피해를 입히고 방어도 5를 얻는다."
 cost = 1
 card_type = 0
 target_type = 0

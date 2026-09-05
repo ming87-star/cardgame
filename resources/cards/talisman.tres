@@ -4,11 +4,10 @@
 
 [resource]
 script = ExtResource("1")
-id = "bash"
-card_name = "일도양단"
-description = "온 힘을 실어 내려친다. 8의 피해를 입히고 2턴간 취약을 부여한다."
-cost = 2
-card_type = 0
+id = "talisman"
+card_name = "부적"
+description = "부적을 던져 요사한 기운을 억누른다. 적에게 2턴간 약화를 부여한다."
+cost = 1
+card_type = 1
 target_type = 0
-damage = 8
-apply_vulnerable = 2
+apply_weak = 2

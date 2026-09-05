@@ -5,7 +5,8 @@
 [resource]
 script = ExtResource("1")
 id = "inflame"
-card_name = "Inflame"
+card_name = "기합"
+description = "기합을 넣어 힘 3을 얻는다."
 cost = 1
 card_type = 2
 target_type = 1

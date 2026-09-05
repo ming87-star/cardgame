@@ -4,10 +4,11 @@
 
 [resource]
 script = ExtResource("1")
-id = "strike"
-card_name = "베기"
-description = "칼을 크게 휘둘러 6의 피해를 입힌다."
+id = "resolve"
+card_name = "필사즉생"
+description = "죽고자 하면 살리라. 체력 3을 회복하고 방어도 3을 얻는다."
 cost = 1
-card_type = 0
-target_type = 0
-damage = 6
+card_type = 1
+target_type = 1
+heal = 3
+block = 3

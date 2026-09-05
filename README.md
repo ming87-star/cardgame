@@ -1,28 +1,67 @@
-# Card Crawler (prototype)
+# 한양 가는 길 (prototype)
 
 Android-first card-collecting deckbuilding roguelike, built in **Godot 4**
-(GDScript). Turn-based 1:1 combat in the style of Slay the Spire. World/theme
-is not decided yet — this is the systems skeleton.
+(GDScript). Turn-based 1:1 combat in the style of Slay the Spire, set in a
+Joseon-era Korea where scholars, warriors, and traveling merchants share the
+same road — and the same monsters, both folklore (도깨비) and mundane
+(산적).
+
+## Story
+
+Three playable characters, each walking to Hanyang for their own reason,
+each picking up a different rumor about the same thing brewing in the
+capital:
+
+- **선비 (Scholar)** — chasing the state examination and a government post.
+  Hears it from officials: scholars are quietly going missing.
+- **무사 (Warrior)**, unlocked after clearing a run as the Scholar —
+  chasing the military exam to rebuild a fallen house. Hears it from
+  soldiers: the ground shakes under the capital at night.
+- **보부상 (Merchant)**, unlocked after clearing a run as the Warrior —
+  delivering goods to pay off a debt. Hears it from traders: people vanish
+  from a warehouse under the city wall.
+
+All three threads point at the same final boss — something enormous
+underneath Hanyang itself. `resources/enemies/hanyang_calamity.tres` is a
+data stub for it (not in the random encounter pool yet — there's no map/
+run-length system to place it at the end of yet).
 
 ## What's here
 
-A playable vertical slice: main menu → start a run → turn-based combat
-against one enemy → win/lose → back to menu.
+A playable vertical slice: main menu → character select (locked/unlocked)
+→ turn-based combat against one enemy → win (see a clue) / lose → back to
+menu. Character unlocks persist across launches (`user://save.json`).
 
+- `scripts/data/character_data.gd` — `CharacterData` resource: display
+  name, motivation, the clue heard on victory, starting HP/deck.
 - `scripts/data/card_data.gd` — `CardData` resource (cost, damage, block,
   heal, vulnerable/weak/strength). New cards are just new `.tres` files, no
   code changes needed.
 - `scripts/data/enemy_data.gd` — `EnemyData` resource with a cyclic move
-  pattern (attack / defend / buff), shown to the player as an "intent".
-- `resources/cards/`, `resources/enemies/` — sample content (Strike, Defend,
-  Bash, Iron Wave, Inflame; Acid Slime).
-- `scripts/autoload/game_manager.gd` — run state (HP, deck) and scene
-  transitions. Registered as the `GameManager` autoload singleton.
-- `scenes/combat/`, `scenes/card/`, `scenes/main_menu/` — the three screens.
+  pattern (attack / defend / buff / weaken), shown to the player as an
+  "intent".
+- `resources/characters/` — scholar, warrior, merchant, each with their own
+  starting deck (scholar leans debuff/control, warrior leans aggressive,
+  merchant leans balanced/utility).
+- `resources/cards/` — 베기, 방어 자세, 일도양단, 반격 자세, 기합, 부적,
+  필사즉생.
+- `resources/enemies/` — 도깨비 (applies Weak), 산적 두목 (buffs/blocks),
+  plus the boss stub above.
+- `scripts/autoload/game_manager.gd` — run state, character-unlock chain +
+  save/load, scene transitions. Registered as the `GameManager` autoload.
+- `scenes/character_select/`, `scenes/combat/`, `scenes/card/`,
+  `scenes/main_menu/` — the four screens.
 
 Combat implements: energy (3/turn), draw/hand/discard piles with reshuffle,
-block, Vulnerable (+50% damage taken) and Weak (-25% damage dealt) status
-effects, Strength (flat damage buff), and a telegraphed enemy intent.
+block, Vulnerable (+50% damage taken), Weak (-25% damage dealt, now
+inflictable on the player too, by 도깨비), and Strength (flat damage buff).
+
+## Known follow-up: Korean font
+
+Godot's bundled default UI font doesn't include Hangul glyphs, so Korean
+text may render as blank boxes/tofu until a CJK-capable font (e.g. Noto
+Sans KR, Pretendard) is set as the project's default theme font. Not done
+yet — flagging it before anyone tests on a real device.
 
 ## Requirements
 
@@ -38,20 +77,19 @@ effects, Strength (flat damage buff), and a telegraphed enemy intent.
 Open `project.godot` in the Godot editor and press Play, or headless:
 
 ```
-godot --path . 
+godot --path .
 ```
 
 ## Roadmap (not built yet)
 
-- Node-map run structure (branching path, elites, rest sites, shops) instead
-  of a single fixed fight
+- Node-map run structure (branching path, elites, rest sites, shops) so a
+  run has more than one fight — this is also where the final boss
+  (`hanyang_calamity.tres`) gets placed at the end of the road
+  - Sequenced storytelling: more clues per character across multiple
+    fights, not just one on first victory
 - Card rewards after combat + a larger card pool / rarities
-- Meta-progression: unlocking new cards/characters between runs, persistent
-  save data
-- Enemy variety + a boss
+- Korean-capable UI font (see above)
 - Art, SFX, and juice (card play animations, damage numbers, particles)
-- World/theme once decided — the systems above are setting-agnostic on
-  purpose
 
 ## Porting to desktop later
 

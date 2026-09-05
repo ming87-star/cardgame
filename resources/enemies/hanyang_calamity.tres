@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "hanyang_calamity"
+enemy_name = "한양을 뒤덮은 거대한 무언가"
+max_hp = 200
+moves = Array[Dictionary]([{
+"move_name": "그림자가 드리우다",
+"type": "attack",
+"value": 14
+}, {
+"move_name": "포효",
+"type": "buff",
+"value": 3
+}, {
+"move_name": "숨결",
+"type": "weaken",
+"value": 3
+}])

@@ -4,19 +4,19 @@
 
 [resource]
 script = ExtResource("1")
-id = "slime"
-enemy_name = "Acid Slime"
-max_hp = 42
+id = "bandit_chief"
+enemy_name = "산적 두목"
+max_hp = 48
 moves = Array[Dictionary]([{
-"move_name": "Corrosive Spit",
+"move_name": "칼부림",
 "type": "attack",
-"value": 7
+"value": 9
 }, {
-"move_name": "Hunker Down",
+"move_name": "방패로 막기",
 "type": "defend",
-"value": 6
+"value": 8
 }, {
-"move_name": "Enrage",
+"move_name": "기합",
 "type": "buff",
 "value": 2
 }])

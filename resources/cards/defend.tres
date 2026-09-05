@@ -5,7 +5,8 @@
 [resource]
 script = ExtResource("1")
 id = "defend"
-card_name = "Defend"
+card_name = "방어 자세"
+description = "몸을 낮춰 방어 태세를 취한다. 방어도 5를 얻는다."
 cost = 1
 card_type = 1
 target_type = 1
