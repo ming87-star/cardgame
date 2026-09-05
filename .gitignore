@@ -6,6 +6,7 @@ export_presets.cfg
 
 # Exported builds
 android/
+build/
 *.apk
 *.aab
 *.pck
