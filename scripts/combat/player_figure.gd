@@ -22,8 +22,13 @@ func _ready() -> void:
 	energy_bar.set_fill_color(Color(0.29, 0.365, 0.51))
 	self_badge.hide()
 
-func set_portrait(texture: Texture2D) -> void:
-	sprite.texture = texture
+var _idle_texture: Texture2D = null
+var _attack_texture: Texture2D = null
+
+func set_character(data: CharacterData) -> void:
+	_idle_texture = data.get_battle_idle()
+	_attack_texture = data.battle_attack
+	sprite.texture = _idle_texture
 
 func set_stats(hp: int, max_hp: int, energy: int, max_energy: int,
 		block: int, weak: int, strength: int) -> void:
@@ -41,7 +46,10 @@ func set_drag_state(state: GroundMarker.State) -> void:
 
 ## The player faces right, so they strike rightward and recoil leftward.
 func play_attack() -> void:
+	if _attack_texture:
+		sprite.texture = _attack_texture
 	await anim.lunge(1)
+	sprite.texture = _idle_texture
 
 func play_pulse() -> void:
 	await anim.pulse()

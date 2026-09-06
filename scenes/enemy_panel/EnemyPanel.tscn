@@ -38,6 +38,9 @@ unique_name_in_owner = true
 mouse_filter = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.149, 0.133, 0.114, 1)
+theme_override_colors/font_outline_color = Color(0.965, 0.937, 0.878, 0.9)
+theme_override_constants/outline_size = 4
 text = "0"
 
 [node name="FigureSlot" type="Control" parent="VBox"]
@@ -102,30 +105,29 @@ theme_override_font_sizes/font_size = 12
 horizontal_alignment = 1
 text = "전체"
 
-[node name="InfoPanel" type="PanelContainer" parent="VBox"]
-mouse_filter = 2
-layout_mode = 2
-
-[node name="InfoVBox" type="VBoxContainer" parent="VBox/InfoPanel"]
+[node name="InfoVBox" type="VBoxContainer" parent="VBox"]
 mouse_filter = 2
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="NameLabel" type="Label" parent="VBox/InfoPanel/InfoVBox"]
+[node name="NameLabel" type="Label" parent="VBox/InfoVBox"]
 unique_name_in_owner = true
 mouse_filter = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.149, 0.133, 0.114, 1)
+theme_override_colors/font_outline_color = Color(0.965, 0.937, 0.878, 0.9)
+theme_override_constants/outline_size = 4
 horizontal_alignment = 1
 autowrap_mode = 2
 text = "Enemy"
 
-[node name="HPBar" parent="VBox/InfoPanel/InfoVBox" instance=ExtResource("2")]
+[node name="HPBar" parent="VBox/InfoVBox" instance=ExtResource("2")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 18)
 layout_mode = 2
 
-[node name="StatusRow" type="HBoxContainer" parent="VBox/InfoPanel/InfoVBox"]
+[node name="StatusRow" type="HBoxContainer" parent="VBox/InfoVBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 18)
 mouse_filter = 2

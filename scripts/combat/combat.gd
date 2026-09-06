@@ -11,6 +11,7 @@ const BLOCK_COLOR := Color(0.2, 0.33, 0.5)
 const HEAL_COLOR := Color(0.24, 0.45, 0.26)
 
 @onready var background: TextureRect = %Background
+@onready var tray_art: TextureRect = %TrayArt
 @onready var player_figure: PlayerFigureUI = %PlayerFigure
 @onready var enemy_row: HBoxContainer = %EnemyRow
 @onready var fx_layer: Control = %FxLayer
@@ -56,7 +57,8 @@ func _ready() -> void:
 
 	player_figure.combat = self
 	if GameManager.current_character:
-		player_figure.set_portrait(GameManager.current_character.portrait)
+		player_figure.set_character(GameManager.current_character)
+		tray_art.texture = GameManager.current_character.card_tray
 
 	_spawn_enemies()
 

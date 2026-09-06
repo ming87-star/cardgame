@@ -76,7 +76,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="HandTray" type="Panel" parent="."]
+[node name="HandTray" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -85,6 +85,16 @@ anchor_bottom = 1.0
 offset_top = -184.0
 grow_horizontal = 2
 grow_vertical = 0
+
+[node name="TrayArt" type="TextureRect" parent="HandTray"]
+unique_name_in_owner = true
+mouse_filter = 2
+modulate = Color(0.92, 0.92, 0.92, 0.95)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+expand_mode = 1
 
 [node name="HandScroll" type="ScrollContainer" parent="HandTray"]
 layout_mode = 1

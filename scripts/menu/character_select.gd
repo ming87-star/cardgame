@@ -33,7 +33,7 @@ func _populate() -> void:
 			portrait.texture = data.portrait
 			portrait.custom_minimum_size = Vector2(88, 128)
 			portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			portrait.stretch_mode = TextureRect.STRETCH_SCALE
+			portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			if not unlocked:
 				portrait.modulate = Color(0.5, 0.5, 0.55, 0.8)
