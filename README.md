@@ -172,10 +172,44 @@ theme that made the ink-wash art look muddy and low-contrast on mobile).
   read as paper objects sitting on the table. `EnemyPanel.tscn` reuses the
   same style through a plain `Panel` background node (`Panel/styles/panel`
   in the theme), so cards and enemy panels visually match.
-- HP/energy gauges, status icons (block/weak/vulnerable/strength/intent),
-  and the result screen were all re-tuned for contrast against the paper
-  background — see the color constants in `scripts/ui/status_badges.gd`
-  and the `set_fill_color` calls in `combat.gd`/`enemy_panel.gd`.
+- Status icons (block/weak/vulnerable/strength/intent) and the result screen
+  were re-tuned for contrast against the paper background — see the color
+  constants in `scripts/ui/status_badges.gd`.
+- Gauges are not boxes. `scripts/ui/hp_bar.gd` draws each one as a single
+  brush stroke: tapered to a point at both ends, its edge wavering on a
+  per-instance phase so neighbouring bars don't ripple in unison, and a
+  partial bar stops bluntly like ink that ran out mid-sweep. Nothing sits
+  behind them, so the value text carries an outline instead.
+
+## Art direction
+
+Two styles, split by what the thing *is*:
+
+- **민화 (Joseon folk painting) for people and their belongings** — the three
+  player characters, their card illustrations, and the tray each one lays
+  their hand out on. Bold dark outlines over flat 오방색 mineral color, which
+  stays punchy at the ~170px the sprites actually render at.
+- **수묵화 (ink wash) for the world and what lives in it** — the road
+  backgrounds and every enemy. Enemies are near-flat black silhouettes with
+  one restrained accent wash, which makes them read as a nameless dark mass
+  against the single clearly-drawn figure the player controls.
+
+Clothing is a deliberate constraint, not an oversight: none of the three has
+rank, so the garments carry no embroidery, gold thread, or 흉배 rank badge.
+선비 in particular is a 포의 — plain undyed white 도포, one indigo 세조대 —
+because he is travelling to *sit* the examination, not returning from
+passing it. The same logic puts a 패랭이 on 보부상 rather than a 삿갓.
+
+선비's archery follows 국궁 form: he shoots standing upright with the spine
+vertical, never from a low martial crouch. Archery was one of the 육예 a
+scholar studied as self-cultivation, which is also where his card names come
+from, so drawing him as a fighter would contradict the character.
+
+Per-character art lives in `resources/art/`: `characters/` (select-screen
+portraits, waist-up, with a seal stamp), `battle/` (full-body idle and
+attack sprites, no seal, framed tight), `trays/`, `cards/`, `enemies/` and
+`backgrounds/`. Generation prompts are kept out of the repo; regenerate by
+matching the constraints above.
 
 ## Requirements
 
