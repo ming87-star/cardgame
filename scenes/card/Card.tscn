@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/card/card.gd" id="1"]
 
 [node name="CardUI" type="Button"]
-custom_minimum_size = Vector2(150, 210)
+custom_minimum_size = Vector2(132, 184)
 theme_type_variation = &"CardButton"
 script = ExtResource("1")
 
@@ -40,7 +40,7 @@ text = "Card Name"
 [node name="ArtRect" type="TextureRect" parent="Margin/VBox"]
 unique_name_in_owner = true
 mouse_filter = 2
-custom_minimum_size = Vector2(0, 84)
+custom_minimum_size = Vector2(0, 68)
 size_flags_horizontal = 3
 expand_mode = 1
 stretch_mode = 5

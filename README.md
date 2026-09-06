@@ -116,6 +116,46 @@ license text alongside it) is set as `gui/theme/custom_font` in
 `project.godot`, which applies it project-wide without needing a Theme
 resource on every scene.
 
+## Battlefield combat
+
+Combat is staged as an encounter on the road rather than a stat panel: a
+landscape background fills the screen, the player stands on the left facing
+right, and the enemies stand on the right facing left, all drawn at
+comparable scale from the same 168x290 figure slot (`PlayerFigure.tscn` and
+`EnemyPanel.tscn` mirror each other deliberately).
+
+- **Idle motion** (`scripts/combat/figure_anim.gd`) is synthesised, not
+  frame-based: a bob plus a slight vertical squash about the feet, with a
+  randomised phase per figure. Per-frame sprite sheets were rejected because
+  AI-generated frames jitter in this hand-painted ink style and read as
+  flicker; discrete *pose* swaps are used instead, where a wobble between
+  frames doesn't show.
+- **Enemy poses telegraph intent.** `EnemyData` carries `art_idle`,
+  `art_attack` and `art_guard`, and `get_pose_art(move_type)` picks the one
+  matching the move the enemy has queued, so the board is readable from the
+  figures alone rather than from the intent icons.
+- **Actions are sequenced.** Playing a card and the enemy turn are both
+  coroutines: the actor lunges, damage lands, the target flashes and recoils,
+  a floating number pops, and only then does the next actor move. Input stays
+  locked (`is_busy`) for the whole sequence so turn order is legible.
+- **Backgrounds** live in `resources/art/backgrounds/` and are chosen per
+  encounter by `GameManager._pick_background()`. That indirection is the seam
+  for the future map: a node will name its own background instead of rolling
+  one at random.
+
+### Targeting
+
+Cards are dropped on whoever they affect, and the drag itself explains where
+they may land (`combat.gd::_show_drag_hints`):
+
+- A card with no enemy-directed effect is played on the player: their ground
+  marker lights up and a 자신 badge appears. Enemy figures refuse the drop.
+- An attacking or debuffing card must be dropped on an enemy; dropping it on
+  open ground is rejected and the card simply stays in hand.
+- 선비's group debuffs mark every living enemy with a 전체 badge, and 무사's
+  splash attacks mark them 여파, so a card that reaches more than one target
+  says so before it is committed.
+
 ## Visual theme
 
 Bright hanji-paper + hanok-wood palette (replaced an earlier dark-navy

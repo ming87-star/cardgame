@@ -1,12 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=5 format=3]
 
-[ext_resource type="Script" path="res://scripts/combat/enemy_panel.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/combat/player_figure.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/ui/HPBar.tscn" id="2"]
-[ext_resource type="Script" path="res://scripts/ui/stat_icon.gd" id="3"]
-[ext_resource type="Script" path="res://scripts/combat/figure_anim.gd" id="4"]
-[ext_resource type="Script" path="res://scripts/ui/ground_marker.gd" id="5"]
+[ext_resource type="Script" path="res://scripts/combat/figure_anim.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/ui/ground_marker.gd" id="4"]
 
-[node name="EnemyPanelUI" type="Control"]
+[node name="PlayerFigureUI" type="Control"]
 custom_minimum_size = Vector2(168, 290)
 script = ExtResource("1")
 
@@ -18,27 +17,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme_override_constants/separation = 2
 
-[node name="IntentRow" type="HBoxContainer" parent="VBox"]
+[node name="TopSlot" type="Control" parent="VBox"]
 custom_minimum_size = Vector2(0, 24)
 mouse_filter = 2
 layout_mode = 2
-alignment = 1
-theme_override_constants/separation = 4
-
-[node name="IntentIcon" type="Control" parent="VBox/IntentRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(18, 18)
-mouse_filter = 2
-layout_mode = 2
-size_flags_vertical = 4
-script = ExtResource("3")
-
-[node name="IntentValueLabel" type="Label" parent="VBox/IntentRow"]
-unique_name_in_owner = true
-mouse_filter = 2
-layout_mode = 2
-theme_override_font_sizes/font_size = 15
-text = "0"
 
 [node name="FigureSlot" type="Control" parent="VBox"]
 custom_minimum_size = Vector2(0, 196)
@@ -60,7 +42,7 @@ offset_right = 52.0
 offset_bottom = -6.0
 grow_horizontal = 2
 grow_vertical = 0
-script = ExtResource("5")
+script = ExtResource("4")
 
 [node name="Anim" type="Control" parent="VBox/FigureSlot"]
 unique_name_in_owner = true
@@ -69,7 +51,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource("4")
+script = ExtResource("3")
 
 [node name="Sprite" type="TextureRect" parent="VBox/FigureSlot/Anim"]
 unique_name_in_owner = true
@@ -81,7 +63,7 @@ anchor_bottom = 1.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="AoeBadge" type="PanelContainer" parent="VBox/FigureSlot"]
+[node name="SelfBadge" type="PanelContainer" parent="VBox/FigureSlot"]
 unique_name_in_owner = true
 visible = false
 mouse_filter = 2
@@ -94,13 +76,12 @@ offset_right = 26.0
 offset_bottom = 24.0
 grow_horizontal = 2
 
-[node name="AoeLabel" type="Label" parent="VBox/FigureSlot/AoeBadge"]
-unique_name_in_owner = true
+[node name="SelfLabel" type="Label" parent="VBox/FigureSlot/SelfBadge"]
 mouse_filter = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 horizontal_alignment = 1
-text = "전체"
+text = "자신"
 
 [node name="InfoPanel" type="PanelContainer" parent="VBox"]
 mouse_filter = 2
@@ -111,21 +92,17 @@ mouse_filter = 2
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="NameLabel" type="Label" parent="VBox/InfoPanel/InfoVBox"]
-unique_name_in_owner = true
-mouse_filter = 2
-layout_mode = 2
-theme_override_font_sizes/font_size = 13
-horizontal_alignment = 1
-autowrap_mode = 2
-text = "Enemy"
-
-[node name="HPBar" parent="VBox/InfoPanel/InfoVBox" instance=ExtResource("2")]
+[node name="PlayerHPBar" parent="VBox/InfoPanel/InfoVBox" instance=ExtResource("2")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 
-[node name="StatusRow" type="HBoxContainer" parent="VBox/InfoPanel/InfoVBox"]
+[node name="EnergyBar" parent="VBox/InfoPanel/InfoVBox" instance=ExtResource("2")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
+[node name="PlayerStatusRow" type="HBoxContainer" parent="VBox/InfoPanel/InfoVBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 18)
 mouse_filter = 2

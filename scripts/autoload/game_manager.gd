@@ -31,6 +31,14 @@ const ENCOUNTER_POOL: Array[Array] = [
 	["res://resources/enemies/dokkaebi.tres", "res://resources/enemies/dokkaebi.tres", "res://resources/enemies/bandit_chief.tres"],
 ]
 
+## Which stretch of road the fight happens on. Rolled per encounter for now;
+## once the map exists each node will name its own background instead.
+const BACKGROUND_PATHS: Array[String] = [
+	"res://resources/art/backgrounds/field_paddy.png",
+	"res://resources/art/backgrounds/mountain_pass.png",
+	"res://resources/art/backgrounds/city_gate.png",
+]
+
 var unlocked_characters: Array[String] = [CHARACTER_ORDER[0]]
 
 var current_character: CharacterData = null
@@ -38,6 +46,7 @@ var player_max_hp: int = 70
 var player_hp: int = 70
 var deck: Array[CardData] = []
 var next_enemies: Array[EnemyData] = []
+var next_background: Texture2D = null
 
 func _ready() -> void:
 	_load_progress()
@@ -63,6 +72,7 @@ func start_new_run(character_id: String) -> void:
 	next_enemies.clear()
 	for path in ENCOUNTER_POOL.pick_random():
 		next_enemies.append(load(path) as EnemyData)
+	next_background = _pick_background()
 	run_started.emit()
 	get_tree().change_scene_to_file(COMBAT_SCENE)
 
@@ -71,6 +81,15 @@ func end_run(victory: bool) -> void:
 		_unlock_next(current_character.id)
 	run_ended.emit(victory)
 	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
+
+func _pick_background() -> Texture2D:
+	var available: Array[String] = []
+	for path in BACKGROUND_PATHS:
+		if ResourceLoader.exists(path):
+			available.append(path)
+	if available.is_empty():
+		return null
+	return load(available.pick_random()) as Texture2D
 
 func _unlock_next(character_id: String) -> void:
 	var idx: int = CHARACTER_ORDER.find(character_id)
