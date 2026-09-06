@@ -6,14 +6,30 @@ const CARD_SCENE := preload("res://scenes/card/Card.tscn")
 const MAX_ENERGY := 3
 const HAND_SIZE := 5
 
+## The road is a short line of standing places. The player walks up from lane
+## 0; enemies come down from the far end. Distance between two figures is the
+## difference of their lanes, and that number is what every card is measured
+## against.
+const LANE_COUNT := 6
+## The player starts one lane in, not against the edge, so giving ground is a
+## real option from the first turn.
+const PLAYER_START_LANE := 1
+const FIRST_ENEMY_LANE := 3
+const LANE_MARGIN := 20.0
+const FIGURE_WIDTH := 168.0
+
+## 무사's 기세 stops climbing here, and cleaves once it reaches CLEAVE_AT.
+const MAX_MOMENTUM := 3
+const CLEAVE_AT := 2
+
 const DAMAGE_COLOR := Color(0.7, 0.16, 0.12)
 const BLOCK_COLOR := Color(0.2, 0.33, 0.5)
 const HEAL_COLOR := Color(0.24, 0.45, 0.26)
 
 @onready var background: TextureRect = %Background
 @onready var tray_art: TextureRect = %TrayArt
+@onready var lanes_root: Control = %Lanes
 @onready var player_figure: PlayerFigureUI = %PlayerFigure
-@onready var enemy_row: HBoxContainer = %EnemyRow
 @onready var fx_layer: Control = %FxLayer
 @onready var draw_count_label: Label = %DrawCountLabel
 @onready var discard_count_label: Label = %DiscardCountLabel
@@ -32,6 +48,18 @@ var player_weak: int = 0
 var energy: int = 0
 
 var character_id: String = ""
+
+## Where the player stands on the road.
+var player_lane: int = PLAYER_START_LANE
+
+## 선비: bonus damage that builds while he keeps the same enemy in his sights,
+## and is lost the moment he moves or looks elsewhere.
+var aim_stacks: int = 0
+var aim_target: EnemyInstance = null
+
+## 무사: bonus damage earned by walking into the fight, thrown away by
+## giving ground.
+var momentum: int = 0
 
 var enemies: Array[EnemyInstance] = []
 var enemy_panels: Array[EnemyPanelUI] = []
@@ -61,6 +89,8 @@ func _ready() -> void:
 		tray_art.texture = GameManager.current_character.card_tray
 
 	_spawn_enemies()
+	lanes_root.resized.connect(_layout_figures.bind(false))
+	_layout_figures(false)
 
 	draw_pile = GameManager.deck.duplicate()
 	draw_pile.shuffle()
@@ -77,6 +107,7 @@ func _spawn_enemies() -> void:
 		name_totals[data.enemy_name] = name_totals.get(data.enemy_name, 0) + 1
 	var name_seen: Dictionary = {}
 
+	var lane: int = FIRST_ENEMY_LANE
 	for data in GameManager.next_enemies:
 		var display: String = data.enemy_name
 		if name_totals[display] > 1:
@@ -85,13 +116,98 @@ func _spawn_enemies() -> void:
 			display = "%s %d" % [display, seen]
 
 		var instance := EnemyInstance.new(data, display)
+		instance.lane = mini(lane, LANE_COUNT - 1)
+		lane += 1
 		enemies.append(instance)
 
 		var panel: EnemyPanelUI = ENEMY_PANEL_SCENE.instantiate()
-		enemy_row.add_child(panel)
+		lanes_root.add_child(panel)
 		panel.combat = self
 		panel.set_enemy(instance)
 		enemy_panels.append(panel)
+
+# --- the road ---------------------------------------------------------------
+
+func distance_to(enemy: EnemyInstance) -> int:
+	return enemy.lane - player_lane
+
+func is_lane_free(lane: int, mover: EnemyInstance = null) -> bool:
+	if lane < 0 or lane >= LANE_COUNT:
+		return false
+	if lane == player_lane and mover != null:
+		return false
+	for e in enemies:
+		if e != mover and e.is_alive() and e.lane == lane:
+			return false
+	return true
+
+func _lane_x(lane: int) -> float:
+	var usable: float = maxf(lanes_root.size.x - FIGURE_WIDTH - LANE_MARGIN * 2.0, 1.0)
+	return LANE_MARGIN + usable * (float(lane) / float(LANE_COUNT - 1))
+
+func _layout_figures(animate: bool = true) -> void:
+	_place(player_figure, player_lane, animate)
+	for i in enemies.size():
+		_place(enemy_panels[i], enemies[i].lane, animate)
+
+func _place(figure: Control, lane: int, animate: bool) -> void:
+	figure.size = figure.custom_minimum_size
+	var target := Vector2(_lane_x(lane), lanes_root.size.y - figure.custom_minimum_size.y)
+	if not animate:
+		figure.position = target
+		return
+	var tw := create_tween()
+	tw.tween_property(figure, "position", target, 0.26) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+## Returns true if the player actually shifted. Movement stops at the ends of
+## the road and never walks through anyone.
+func _move_player(steps: int) -> bool:
+	var step: int = signi(steps)
+	var start: int = player_lane
+	for i in absi(steps):
+		var next: int = player_lane + step
+		if next < 0 or next >= LANE_COUNT:
+			break
+		var blocked := false
+		for e in enemies:
+			if e.is_alive() and e.lane == next:
+				blocked = true
+				break
+		if blocked:
+			break
+		player_lane = next
+
+	# 선비 loses his sight-picture the moment he shifts his feet; 무사 trades
+	# ground for 기세 in one direction only.
+	aim_stacks = 0
+	aim_target = null
+	if character_id == "warrior":
+		momentum = 0 if steps < 0 else mini(momentum + 1, MAX_MOMENTUM)
+	_layout_figures()
+	return player_lane != start
+
+## Giving ground is 선비's whole game, so it must never be unavailable: with
+## his back to the end of the road he shoves whatever has closed on him
+## instead, and the gap opens either way.
+func _shove_nearest() -> bool:
+	var closest: EnemyInstance = null
+	for e in enemies:
+		if not e.is_alive():
+			continue
+		if closest == null or e.lane < closest.lane:
+			closest = e
+	if closest == null:
+		return false
+	var next: int = closest.lane + 1
+	if not is_lane_free(next, closest):
+		return false
+	closest.lane = next
+	_layout_figures()
+	var panel: EnemyPanelUI = _panel_for(closest)
+	if panel:
+		_popup(panel, "밀려남", BLOCK_COLOR)
+	return true
 
 func start_player_turn() -> void:
 	# 보부상: sturdy travel gear keeps half of whatever block survived the enemies' turn.
@@ -132,15 +248,25 @@ func card_can_target_enemy(data: CardData) -> bool:
 func card_can_target_self(data: CardData) -> bool:
 	return not card_can_target_enemy(data)
 
+## Reach check: a bow can't be used on something in your face, and a sabre
+## can't touch what you haven't closed on.
+func card_in_range(data: CardData, enemy: EnemyInstance) -> bool:
+	var d: int = distance_to(enemy)
+	return d >= data.range_min and d <= data.range_max
+
+func can_play_on_enemy(data: CardData, enemy: EnemyInstance) -> bool:
+	return card_can_target_enemy(data) and enemy.is_alive() and card_in_range(data, enemy)
+
 ## 선비's debuffs land on the whole group no matter which enemy is picked.
 func card_hits_all_enemies(data: CardData) -> bool:
 	if character_id != "scholar":
 		return false
 	return data.apply_vulnerable > 0 or data.apply_weak > 0
 
-## 무사's attacks splash onto one other enemy.
+## 무사 splashes only once he has built enough 기세 to carry the swing through.
 func card_splashes(data: CardData) -> bool:
-	return character_id == "warrior" and data.damage > 0 and _alive_enemy_count() > 1
+	return character_id == "warrior" and data.damage > 0 \
+		and momentum >= CLEAVE_AT and _alive_enemy_count() > 1
 
 # --- card play -------------------------------------------------------------
 
@@ -156,7 +282,7 @@ func try_play_card(card_ui: CardUI, preferred_target: EnemyInstance) -> bool:
 
 	var target: EnemyInstance = null
 	if card_can_target_enemy(data):
-		if preferred_target == null or not preferred_target.is_alive():
+		if preferred_target == null or not can_play_on_enemy(data, preferred_target):
 			return false
 		target = preferred_target
 
@@ -173,19 +299,27 @@ func _resolve_card(card_ui: CardUI, target: EnemyInstance) -> void:
 	discard_pile.append(data)
 	update_all_ui()
 
+	if data.move_lanes != 0:
+		var stepped: bool = _move_player(data.move_lanes)
+		if not stepped and data.move_lanes < 0:
+			_shove_nearest()
+		await player_figure.play_pulse()
+
 	if data.damage > 0 and target:
+		var bonus: int = _class_damage_bonus(target)
 		await player_figure.play_attack()
-		await _strike_enemy(target, data.damage, true)
-		if character_id == "warrior":
+		await _strike_enemy(target, data.damage + bonus, true)
+		_advance_aim(target)
+		if card_splashes(data):
 			await _cleave(target, data.damage)
-	else:
+	elif data.move_lanes == 0:
 		await player_figure.play_pulse()
 
 	if data.block > 0:
 		player_block += data.block
 		_popup(player_figure, "+%d 방어" % data.block, BLOCK_COLOR)
 	if data.heal > 0:
-		var healed: int = min(data.heal, player_max_hp - player_hp)
+		var healed: int = mini(data.heal, player_max_hp - player_hp)
 		player_hp += healed
 		_popup(player_figure, "+%d" % healed, HEAL_COLOR)
 	if data.apply_strength > 0:
@@ -200,6 +334,20 @@ func _resolve_card(card_ui: CardUI, target: EnemyInstance) -> void:
 	update_all_ui()
 	_check_combat_end()
 
+## 선비 adds whatever 조준 he has built on this target; 무사 adds his 기세.
+func _class_damage_bonus(target: EnemyInstance) -> int:
+	if character_id == "scholar":
+		return aim_stacks if aim_target == target else 0
+	if character_id == "warrior":
+		return momentum
+	return 0
+
+func _advance_aim(target: EnemyInstance) -> void:
+	if character_id != "scholar":
+		return
+	aim_stacks = aim_stacks + 1 if aim_target == target else 1
+	aim_target = target
+
 func _strike_enemy(target: EnemyInstance, base_damage: int, apply_strength: bool) -> void:
 	var dealt: int = _deal_damage_to_enemy(target, base_damage, apply_strength)
 	var panel: EnemyPanelUI = _panel_for(target)
@@ -209,8 +357,6 @@ func _strike_enemy(target: EnemyInstance, base_damage: int, apply_strength: bool
 	update_all_ui()
 
 func _cleave(primary: EnemyInstance, base_damage: int) -> void:
-	if _alive_enemy_count() <= 1:
-		return
 	for e in enemies:
 		if e != primary and e.is_alive():
 			await _strike_enemy(e, int(floor(base_damage * 0.5)), false)
@@ -233,10 +379,10 @@ func _deal_damage_to_enemy(target: EnemyInstance, base_damage: int, apply_streng
 		dmg = int(floor(dmg * 1.5))
 	var remaining: int = dmg
 	if target.block > 0:
-		var absorbed: int = min(target.block, remaining)
+		var absorbed: int = mini(target.block, remaining)
 		target.block -= absorbed
 		remaining -= absorbed
-	target.hp = max(target.hp - remaining, 0)
+	target.hp = maxi(target.hp - remaining, 0)
 	return dmg
 
 func _deal_damage_to_player(acting_enemy: EnemyInstance, base_damage: int) -> int:
@@ -245,10 +391,10 @@ func _deal_damage_to_player(acting_enemy: EnemyInstance, base_damage: int) -> in
 		dmg = int(floor(dmg * 0.75))
 	var remaining: int = dmg
 	if player_block > 0:
-		var absorbed: int = min(player_block, remaining)
+		var absorbed: int = mini(player_block, remaining)
 		player_block -= absorbed
 		remaining -= absorbed
-	player_hp = max(player_hp - remaining, 0)
+	player_hp = maxi(player_hp - remaining, 0)
 	return dmg
 
 # --- turn flow -------------------------------------------------------------
@@ -267,6 +413,8 @@ func _discard_hand() -> void:
 
 ## Enemies act one at a time with a beat between them, each one stepping in
 ## before its effect lands, so the order of play is visible rather than implied.
+## An enemy that wants to attack from too far away walks instead, and keeps its
+## attack queued -- giving ground buys time, it never cancels the blow.
 func _do_enemy_turn() -> void:
 	is_busy = true
 	end_turn_button.disabled = true
@@ -276,11 +424,23 @@ func _do_enemy_turn() -> void:
 		if not e.is_alive():
 			continue
 		e.block = 0
-		var move: Dictionary = e.get_move()
+		var move: Dictionary = e.get_intent(distance_to(e))
 		var panel: EnemyPanelUI = _panel_for(e)
 		await get_tree().create_timer(0.14).timeout
 
+		var executed := true
 		match move.get("type", ""):
+			EnemyData.MOVE_TYPE_ADVANCE:
+				var next: int = e.lane - 1
+				if is_lane_free(next, e):
+					e.lane = next
+					_layout_figures()
+					await get_tree().create_timer(0.3).timeout
+				else:
+					# Stuck behind whoever is in front of it.
+					if panel:
+						await panel.play_pulse()
+				executed = false # the queued attack is still waiting
 			EnemyData.MOVE_TYPE_ATTACK:
 				if panel:
 					await panel.play_attack()
@@ -306,7 +466,8 @@ func _do_enemy_turn() -> void:
 				player_weak += int(move.get("value", 0))
 				_popup(player_figure, "약화", DAMAGE_COLOR)
 
-		e.move_index += 1
+		if executed:
+			e.move_index += 1
 		if e.weak > 0:
 			e.weak -= 1
 		if e.vulnerable > 0:
@@ -359,11 +520,12 @@ func _on_result_button_pressed() -> void:
 
 func update_all_ui() -> void:
 	player_figure.set_stats(player_hp, player_max_hp, energy, MAX_ENERGY,
-		player_block, player_weak, player_strength)
+		player_block, player_weak, player_strength, aim_stacks, momentum)
 	draw_count_label.text = "덱 %d" % draw_pile.size()
 	discard_count_label.text = "버림패 %d" % discard_pile.size()
 
 	for panel in enemy_panels:
+		panel.set_distance(distance_to(panel.enemy))
 		panel.update_display()
 	for card_ui in hand:
 		card_ui.set_playable(not is_busy and card_ui.card_data.cost <= energy)
@@ -399,6 +561,8 @@ func _notification(what: int) -> void:
 		NOTIFICATION_DRAG_END:
 			_clear_drag_hints()
 
+## Lighting up only the figures a card can actually reach doubles as the range
+## indicator: an enemy too far up the road simply stays dark.
 func _show_drag_hints(data: Variant) -> void:
 	if not (data is Dictionary and data.has("card_ui")):
 		return
@@ -413,7 +577,9 @@ func _show_drag_hints(data: Variant) -> void:
 	var hits_all: bool = card_hits_all_enemies(card_data)
 	var splashes: bool = card_splashes(card_data)
 	for panel in enemy_panels:
-		if hits_all:
+		if not can_play_on_enemy(card_data, panel.enemy):
+			panel.set_drag_state(GroundMarker.State.REST)
+		elif hits_all:
 			panel.set_drag_state(GroundMarker.State.AFFECTED, "전체")
 		elif splashes:
 			panel.set_drag_state(GroundMarker.State.TARGET, "여파")

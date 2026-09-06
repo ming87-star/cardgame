@@ -3,7 +3,7 @@ class_name StatIcon
 
 ## Small flat vector icon so status effects and enemy intent read as shapes,
 ## not just numbers -- no image assets needed.
-enum Kind { BLOCK, WEAK, VULNERABLE, STRENGTH, ATTACK, BUFF, WEAKEN }
+enum Kind { BLOCK, WEAK, VULNERABLE, STRENGTH, ATTACK, BUFF, WEAKEN, ADVANCE, AIM }
 
 @export var kind: Kind = Kind.BLOCK:
 	set(v):
@@ -26,6 +26,10 @@ func _draw() -> void:
 			_draw_chevron(true)
 		Kind.ATTACK:
 			_draw_sword()
+		Kind.ADVANCE:
+			_draw_advance()
+		Kind.AIM:
+			_draw_aim()
 
 func _draw_shield() -> void:
 	var w := size.x
@@ -59,6 +63,24 @@ func _draw_burst() -> void:
 		var r: float = r1 if i % 2 == 0 else r2
 		pts.append(Vector2(cx + cos(ang) * r, cy + sin(ang) * r))
 	draw_colored_polygon(pts, icon_color)
+
+## Enemy closing the gap: a leftward arrow, since enemies come up the road
+## from the right.
+func _draw_advance() -> void:
+	var w := size.x
+	var h := size.y
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(w * 0.05, h * 0.5), Vector2(w * 0.5, h * 0.12),
+		Vector2(w * 0.5, h * 0.88),
+	]), icon_color)
+	draw_rect(Rect2(w * 0.5, h * 0.34, w * 0.45, h * 0.32), icon_color)
+
+## 선비's 조준 stack: concentric rings, a target held steady.
+func _draw_aim() -> void:
+	var center := size * 0.5
+	var radius: float = min(size.x, size.y) * 0.5
+	draw_arc(center, radius * 0.9, 0.0, TAU, 20, icon_color, radius * 0.18, true)
+	draw_circle(center, radius * 0.3, icon_color)
 
 func _draw_sword() -> void:
 	var w := size.x

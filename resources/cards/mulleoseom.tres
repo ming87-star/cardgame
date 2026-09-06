@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "mulleoseom"
+card_name = "물러섬"
+description = "발을 빼며 간격을 되찾는다. 한 칸 물러서고 방어도 4를 얻는다."
+cost = 0
+card_type = 1
+target_type = 1
+move_lanes = -1
+block = 4

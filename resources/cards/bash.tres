@@ -14,3 +14,5 @@ card_type = 0
 target_type = 0
 damage = 8
 apply_vulnerable = 2
+range_min = 1
+range_max = 1

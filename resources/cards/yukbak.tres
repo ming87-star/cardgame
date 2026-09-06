@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "yukbak"
+card_name = "육박(肉薄)"
+description = "몸으로 파고든다. 한 칸 나아가고 기세를 얻는다."
+cost = 0
+card_type = 1
+target_type = 1
+move_lanes = 1

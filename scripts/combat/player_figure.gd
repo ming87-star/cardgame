@@ -31,13 +31,15 @@ func set_character(data: CharacterData) -> void:
 	sprite.texture = _idle_texture
 
 func set_stats(hp: int, max_hp: int, energy: int, max_energy: int,
-		block: int, weak: int, strength: int) -> void:
+		block: int, weak: int, strength: int, aim: int = 0, momentum: int = 0) -> void:
 	hp_bar.set_values(hp, max_hp)
 	energy_bar.set_values(energy, max_energy)
 	StatusBadges.build(status_row, [
 		[StatIcon.Kind.BLOCK, block, StatusBadges.BLOCK_COLOR],
 		[StatIcon.Kind.WEAK, weak, StatusBadges.WEAK_COLOR],
 		[StatIcon.Kind.STRENGTH, strength, StatusBadges.STRENGTH_COLOR],
+		[StatIcon.Kind.AIM, aim, StatusBadges.AIM_COLOR],
+		[StatIcon.Kind.ADVANCE, momentum, StatusBadges.MOMENTUM_COLOR],
 	])
 
 func set_drag_state(state: GroundMarker.State) -> void:

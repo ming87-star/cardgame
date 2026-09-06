@@ -9,6 +9,13 @@ const MOVE_TYPE_ATTACK := "attack"
 const MOVE_TYPE_DEFEND := "defend"
 const MOVE_TYPE_BUFF := "buff"
 const MOVE_TYPE_WEAKEN := "weaken"
+## Not authored in `moves`: substituted at runtime when an enemy wants to
+## attack but is still too far up the road to reach.
+const MOVE_TYPE_ADVANCE := "advance"
+
+## How close an enemy must be for an attack move that doesn't state its own
+## `range`. Most things on this road have to be next to you to hurt you.
+const DEFAULT_ATTACK_RANGE := 1
 
 @export var id: String = ""
 @export var enemy_name: String = "Unnamed"
@@ -31,7 +38,7 @@ func get_move(index: int) -> Dictionary:
 
 func get_pose_art(move_type: String) -> Texture2D:
 	match move_type:
-		MOVE_TYPE_ATTACK:
+		MOVE_TYPE_ATTACK, MOVE_TYPE_ADVANCE:
 			if art_attack:
 				return art_attack
 		MOVE_TYPE_DEFEND, MOVE_TYPE_BUFF, MOVE_TYPE_WEAKEN:

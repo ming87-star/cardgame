@@ -7,11 +7,15 @@ var card_data: CardData
 @onready var name_label: Label = %NameLabel
 @onready var art_rect: TextureRect = %ArtRect
 @onready var desc_label: Label = %DescLabel
+@onready var range_label: Label = %RangeLabel
 
 func set_card(data: CardData) -> void:
 	card_data = data
 	cost_label.text = str(data.cost)
 	name_label.text = data.card_name
+	var reach: String = data.get_range_label()
+	range_label.text = reach
+	range_label.visible = not reach.is_empty()
 	art_rect.texture = data.art
 	art_rect.visible = data.art != null
 	desc_label.text = data.get_display_description()

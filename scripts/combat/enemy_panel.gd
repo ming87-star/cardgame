@@ -9,6 +9,13 @@ const HIT_FLASH := Color(1.6, 0.62, 0.5, 1.0)
 var enemy: EnemyInstance
 var combat: Control
 
+## Lanes between this enemy and the player, pushed in by combat before each
+## refresh. The intent depends on it: an enemy too far to swing walks instead.
+var distance: int = 0
+
+func set_distance(value: int) -> void:
+	distance = value
+
 @onready var name_label: Label = %NameLabel
 @onready var hp_bar: HPBar = %HPBar
 @onready var status_row: HBoxContainer = %StatusRow
@@ -48,7 +55,7 @@ func update_display() -> void:
 
 	ground_marker.show()
 	intent_icon.show()
-	var move: Dictionary = enemy.get_move()
+	var move: Dictionary = enemy.get_intent(distance)
 	var move_type: String = move.get("type", "")
 
 	# The enemy physically stands in the pose it is about to use, so the board
@@ -68,6 +75,9 @@ func update_display() -> void:
 		EnemyData.MOVE_TYPE_WEAKEN:
 			intent_icon.kind = StatIcon.Kind.WEAKEN
 			intent_value_label.text = ""
+		EnemyData.MOVE_TYPE_ADVANCE:
+			intent_icon.kind = StatIcon.Kind.ADVANCE
+			intent_value_label.text = "접근"
 
 ## Drag-time affordance. REST = not a legal drop, TARGET = droppable here,
 ## AFFECTED = this card hits every enemy, including this one, wherever it lands.
@@ -97,10 +107,9 @@ func take_hit() -> void:
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	if not (data is Dictionary and data.has("card_ui")):
 		return false
-	if not enemy.is_alive():
-		return false
-	# A card that only affects the player must not be consumed by an enemy.
-	return combat.card_can_target_enemy(data["card_ui"].card_data)
+	# A card that only affects the player, or one whose reach falls short of
+	# this lane, must not be consumed by an enemy.
+	return combat.can_play_on_enemy(data["card_ui"].card_data, enemy)
 
 func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	combat.try_play_card(data["card_ui"], enemy)
