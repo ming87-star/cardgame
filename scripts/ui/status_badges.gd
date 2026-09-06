@@ -1,6 +1,13 @@
 extends RefCounted
 class_name StatusBadges
 
+## Darkened enough to hold contrast against the game's hanji-paper
+## background; the earlier pastel set was tuned for a dark background.
+const BLOCK_COLOR := Color(0.23, 0.35, 0.5)
+const WEAK_COLOR := Color(0.42, 0.28, 0.5)
+const VULNERABLE_COLOR := Color(0.7, 0.28, 0.16)
+const STRENGTH_COLOR := Color(0.55, 0.4, 0.08)
+
 ## Rebuilds a row of small icon+number chips (block, weak, vulnerable,
 ## strength...) inside an existing HBoxContainer. Call every time the
 ## underlying values change; it just clears and redraws.

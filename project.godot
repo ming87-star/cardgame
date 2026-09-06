@@ -14,7 +14,7 @@ config/name="한양 가는 길"
 config/description="선비와 무사, 사람과 요괴가 뒤섞인 조선 배경 덱빌딩 로그라이크 (Android-first)."
 run/main_scene="res://scenes/main_menu/MainMenu.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
-boot_splash/bg_color=Color(0.08, 0.08, 0.1, 1)
+boot_splash/bg_color=Color(0.929, 0.894, 0.816, 1)
 config/icon="res://icon.svg"
 
 [autoload]
@@ -23,6 +23,7 @@ GameManager="*res://scripts/autoload/game_manager.gd"
 
 [gui]
 
+theme/custom="res://resources/theme/GameTheme.tres"
 theme/custom_font="res://resources/fonts/Pretendard-Regular.otf"
 
 [display]

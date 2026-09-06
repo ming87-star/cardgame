@@ -9,7 +9,7 @@ enum Kind { BLOCK, WEAK, VULNERABLE, STRENGTH, ATTACK, BUFF, WEAKEN }
 	set(v):
 		kind = v
 		queue_redraw()
-@export var icon_color: Color = Color.WHITE:
+@export var icon_color: Color = Color(0.149, 0.133, 0.114):
 	set(v):
 		icon_color = v
 		queue_redraw()

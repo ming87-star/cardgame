@@ -1,0 +1,101 @@
+[gd_resource type="Theme" load_steps=10 format=3]
+
+[sub_resource type="StyleBoxFlat" id="ButtonNormal"]
+bg_color = Color(0.42, 0.29, 0.188, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="ButtonHover"]
+bg_color = Color(0.49, 0.345, 0.22, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="ButtonPressed"]
+bg_color = Color(0.29, 0.196, 0.125, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="ButtonDisabled"]
+bg_color = Color(0.42, 0.29, 0.188, 0.4)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="CardNormal"]
+bg_color = Color(0.965, 0.937, 0.878, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.42, 0.29, 0.188, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="CardHover"]
+bg_color = Color(0.98, 0.957, 0.902, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.42, 0.29, 0.188, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="CardPressed"]
+bg_color = Color(0.914, 0.875, 0.784, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.42, 0.29, 0.188, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="CardDisabled"]
+bg_color = Color(0.965, 0.937, 0.878, 0.55)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.42, 0.29, 0.188, 0.55)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[resource]
+default_font_size = 16
+Button/styles/normal = SubResource("ButtonNormal")
+Button/styles/hover = SubResource("ButtonHover")
+Button/styles/pressed = SubResource("ButtonPressed")
+Button/styles/disabled = SubResource("ButtonDisabled")
+Button/styles/focus = SubResource("ButtonNormal")
+Button/colors/font_color = Color(0.929, 0.894, 0.816, 1)
+Button/colors/font_hover_color = Color(0.929, 0.894, 0.816, 1)
+Button/colors/font_pressed_color = Color(0.929, 0.894, 0.816, 1)
+Button/colors/font_disabled_color = Color(0.929, 0.894, 0.816, 0.5)
+Label/colors/font_color = Color(0.149, 0.133, 0.114, 1)
+Panel/styles/panel = SubResource("CardNormal")
+CardButton/base_type = &"Button"
+CardButton/styles/normal = SubResource("CardNormal")
+CardButton/styles/hover = SubResource("CardHover")
+CardButton/styles/pressed = SubResource("CardPressed")
+CardButton/styles/disabled = SubResource("CardDisabled")
+CardButton/styles/focus = SubResource("CardNormal")
+CardButton/colors/font_color = Color(0.149, 0.133, 0.114, 1)
+CardButton/colors/font_hover_color = Color(0.149, 0.133, 0.114, 1)
+CardButton/colors/font_pressed_color = Color(0.149, 0.133, 0.114, 1)
+CardButton/colors/font_disabled_color = Color(0.149, 0.133, 0.114, 0.45)

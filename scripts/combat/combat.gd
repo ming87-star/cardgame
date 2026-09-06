@@ -44,8 +44,8 @@ func _ready() -> void:
 	player_hp = GameManager.player_hp
 	character_id = GameManager.current_character.id if GameManager.current_character else ""
 
-	player_hp_bar.set_fill_color(Color(0.4, 0.68, 0.42))
-	energy_bar.set_fill_color(Color(0.4, 0.55, 0.85))
+	player_hp_bar.set_fill_color(Color(0.478, 0.29, 0.2))
+	energy_bar.set_fill_color(Color(0.29, 0.365, 0.51))
 	if GameManager.current_character:
 		player_portrait.texture = GameManager.current_character.portrait
 
@@ -285,9 +285,9 @@ func update_all_ui() -> void:
 	discard_count_label.text = "버림패 %d" % discard_pile.size()
 
 	StatusBadges.build(player_status_row, [
-		[StatIcon.Kind.BLOCK, player_block, Color(0.55, 0.75, 0.95)],
-		[StatIcon.Kind.WEAK, player_weak, Color(0.75, 0.6, 0.9)],
-		[StatIcon.Kind.STRENGTH, player_strength, Color(0.95, 0.75, 0.35)],
+		[StatIcon.Kind.BLOCK, player_block, StatusBadges.BLOCK_COLOR],
+		[StatIcon.Kind.WEAK, player_weak, StatusBadges.WEAK_COLOR],
+		[StatIcon.Kind.STRENGTH, player_strength, StatusBadges.STRENGTH_COLOR],
 	])
 
 	for panel in enemy_panels:

@@ -116,6 +116,27 @@ license text alongside it) is set as `gui/theme/custom_font` in
 `project.godot`, which applies it project-wide without needing a Theme
 resource on every scene.
 
+## Visual theme
+
+Bright hanji-paper + hanok-wood palette (replaced an earlier dark-navy
+theme that made the ink-wash art look muddy and low-contrast on mobile).
+`resources/theme/GameTheme.tres` is the single global Theme resource
+(registered via `gui/theme/custom` in `project.godot`):
+
+- Paper (`#f6efe0` family) fills scene backgrounds, card faces, and enemy
+  panels; dark ink (`#262119`) is the default `Label` font color.
+- Wood-brown (`#6b4a30` family) is the chrome for real action buttons
+  (end turn, menu buttons) via the default `Button` styles.
+- A `CardButton` theme type variation gives `CardUI` (in `Card.tscn`) a
+  paper fill with a wood border instead of the wood-button look, so cards
+  read as paper objects sitting on the table. `EnemyPanel.tscn` reuses the
+  same style through a plain `Panel` background node (`Panel/styles/panel`
+  in the theme), so cards and enemy panels visually match.
+- HP/energy gauges, status icons (block/weak/vulnerable/strength/intent),
+  and the result screen were all re-tuned for contrast against the paper
+  background — see the color constants in `scripts/ui/status_badges.gd`
+  and the `set_fill_color` calls in `combat.gd`/`enemy_panel.gd`.
+
 ## Requirements
 
 - [Godot 4.3+](https://godotengine.org/download) (Godot 4, not 3.x)

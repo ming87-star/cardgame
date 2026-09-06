@@ -4,6 +4,7 @@
 
 [node name="CardUI" type="Button"]
 custom_minimum_size = Vector2(150, 210)
+theme_type_variation = &"CardButton"
 script = ExtResource("1")
 
 [node name="Margin" type="MarginContainer" parent="."]

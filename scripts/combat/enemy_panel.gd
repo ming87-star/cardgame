@@ -12,19 +12,20 @@ var combat: Control
 
 func set_enemy(e: EnemyInstance) -> void:
 	enemy = e
-	hp_bar.set_fill_color(Color(0.72, 0.32, 0.28))
+	hp_bar.set_fill_color(Color(0.6, 0.24, 0.18))
+	intent_icon.icon_color = Color(0.149, 0.133, 0.114)
 	update_display()
 
 func update_display() -> void:
 	name_label.text = enemy.display_name
 	hp_bar.set_values(enemy.hp, enemy.data.max_hp)
-	modulate = Color(1, 1, 1, 1) if enemy.is_alive() else Color(0.45, 0.45, 0.48, 0.75)
+	modulate = Color(1, 1, 1, 1) if enemy.is_alive() else Color(0.6, 0.58, 0.54, 0.75)
 
 	StatusBadges.build(status_row, [
-		[StatIcon.Kind.BLOCK, enemy.block, Color(0.55, 0.75, 0.95)],
-		[StatIcon.Kind.WEAK, enemy.weak, Color(0.75, 0.6, 0.9)],
-		[StatIcon.Kind.VULNERABLE, enemy.vulnerable, Color(0.95, 0.55, 0.4)],
-		[StatIcon.Kind.STRENGTH, enemy.strength, Color(0.95, 0.75, 0.35)],
+		[StatIcon.Kind.BLOCK, enemy.block, StatusBadges.BLOCK_COLOR],
+		[StatIcon.Kind.WEAK, enemy.weak, StatusBadges.WEAK_COLOR],
+		[StatIcon.Kind.VULNERABLE, enemy.vulnerable, StatusBadges.VULNERABLE_COLOR],
+		[StatIcon.Kind.STRENGTH, enemy.strength, StatusBadges.STRENGTH_COLOR],
 	])
 
 	if not enemy.is_alive():
