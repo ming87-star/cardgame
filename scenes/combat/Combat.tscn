@@ -22,18 +22,20 @@ color = Color(0.929, 0.894, 0.816, 1)
 unique_name_in_owner = true
 mouse_filter = 2
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 356.0
+grow_horizontal = 2
 expand_mode = 1
 stretch_mode = 6
 
 [node name="Stage" type="Control" parent="."]
 mouse_filter = 2
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 356.0
+grow_horizontal = 2
 
 [node name="GroundRow" type="HBoxContainer" parent="Stage"]
 mouse_filter = 2
@@ -44,7 +46,6 @@ anchor_bottom = 1.0
 offset_left = 20.0
 offset_top = 6.0
 offset_right = -20.0
-offset_bottom = -200.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 10
@@ -75,21 +76,30 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="HandScroll" type="ScrollContainer" parent="."]
+[node name="HandTray" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 104.0
-offset_top = -196.0
-offset_right = -148.0
-offset_bottom = -4.0
+offset_top = -184.0
 grow_horizontal = 2
 grow_vertical = 0
+
+[node name="HandScroll" type="ScrollContainer" parent="HandTray"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 104.0
+offset_top = 8.0
+offset_right = -148.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
 vertical_scroll_mode = 0
 
-[node name="HandContainer" type="HBoxContainer" parent="HandScroll"]
+[node name="HandContainer" type="HBoxContainer" parent="HandTray/HandScroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -97,50 +107,46 @@ size_flags_vertical = 3
 alignment = 1
 theme_override_constants/separation = 8
 
-[node name="PileBox" type="VBoxContainer" parent="."]
+[node name="PileBox" type="VBoxContainer" parent="HandTray"]
 mouse_filter = 2
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 0.0
-anchor_top = 1.0
-anchor_right = 0.0
-anchor_bottom = 1.0
-offset_left = 12.0
-offset_top = -92.0
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 14.0
+offset_top = -24.0
 offset_right = 100.0
-offset_bottom = -18.0
+offset_bottom = 24.0
 grow_horizontal = 1
-grow_vertical = 0
+grow_vertical = 2
 theme_override_constants/separation = 6
 
-[node name="DrawCountLabel" type="Label" parent="PileBox"]
+[node name="DrawCountLabel" type="Label" parent="HandTray/PileBox"]
 unique_name_in_owner = true
 mouse_filter = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 text = "덱 0"
 
-[node name="DiscardCountLabel" type="Label" parent="PileBox"]
+[node name="DiscardCountLabel" type="Label" parent="HandTray/PileBox"]
 unique_name_in_owner = true
 mouse_filter = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 text = "버림패 0"
 
-[node name="EndTurnButton" type="Button" parent="."]
+[node name="EndTurnButton" type="Button" parent="HandTray"]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 3
 anchor_left = 1.0
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 0.5
 offset_left = -136.0
-offset_top = -112.0
+offset_top = -23.0
 offset_right = -12.0
-offset_bottom = -66.0
+offset_bottom = 23.0
 grow_horizontal = 0
-grow_vertical = 0
+grow_vertical = 2
 text = "턴 종료"
 
 [node name="ResultPanel" type="ColorRect" parent="."]
