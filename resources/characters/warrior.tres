@@ -1,11 +1,17 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/character_data.gd" id="1"]
 [ext_resource type="Texture2D" path="res://resources/art/characters/warrior.png" id="2"]
+[ext_resource type="Texture2D" path="res://resources/art/battle/warrior_idle.png" id="3"]
+[ext_resource type="Texture2D" path="res://resources/art/battle/warrior_attack.png" id="4"]
+[ext_resource type="Texture2D" path="res://resources/art/trays/warrior.png" id="5"]
 
 [resource]
 script = ExtResource("1")
 portrait = ExtResource("2")
+battle_idle = ExtResource("3")
+battle_attack = ExtResource("4")
+card_tray = ExtResource("5")
 id = "warrior"
 display_name = "무사"
 motivation = "몰락한 가문을 다시 세우기 위해 한양의 무과에 응시하려는 무사. 실력으로 증명하는 것만이 살길이다."

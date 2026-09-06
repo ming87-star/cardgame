@@ -1,6 +1,9 @@
-[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="EnemyData" load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1"]
+[ext_resource type="Texture2D" path="res://resources/art/enemies/bandit_chief_idle.png" id="2"]
+[ext_resource type="Texture2D" path="res://resources/art/enemies/bandit_chief_attack.png" id="3"]
+[ext_resource type="Texture2D" path="res://resources/art/enemies/bandit_chief_guard.png" id="4"]
 
 [resource]
 script = ExtResource("1")
@@ -20,3 +23,6 @@ moves = Array[Dictionary]([{
 "type": "buff",
 "value": 2
 }])
+art_idle = ExtResource("2")
+art_attack = ExtResource("3")
+art_guard = ExtResource("4")

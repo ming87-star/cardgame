@@ -1,11 +1,17 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/character_data.gd" id="1"]
 [ext_resource type="Texture2D" path="res://resources/art/characters/merchant.png" id="2"]
+[ext_resource type="Texture2D" path="res://resources/art/battle/merchant_idle.png" id="3"]
+[ext_resource type="Texture2D" path="res://resources/art/battle/merchant_attack.png" id="4"]
+[ext_resource type="Texture2D" path="res://resources/art/trays/merchant.png" id="5"]
 
 [resource]
 script = ExtResource("1")
 portrait = ExtResource("2")
+battle_idle = ExtResource("3")
+battle_attack = ExtResource("4")
+card_tray = ExtResource("5")
 id = "merchant"
 display_name = "보부상"
 motivation = "빚을 갚기 위해 한양 저잣거리에 물건을 대러 가는 보부상. 장사가 잘 풀려야 목숨을 부지한다."
