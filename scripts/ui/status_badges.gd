@@ -10,6 +10,7 @@ const STRENGTH_COLOR := Color(0.55, 0.4, 0.08)
 ## 선비's 조준 and 무사's 기세 -- the two class resources the road system runs on.
 const AIM_COLOR := Color(0.16, 0.36, 0.46)
 const MOMENTUM_COLOR := Color(0.66, 0.26, 0.14)
+const ROOT_COLOR := Color(0.32, 0.30, 0.26)
 
 ## Rebuilds a row of small icon+number chips (block, weak, vulnerable,
 ## strength...) inside an existing HBoxContainer. Call every time the

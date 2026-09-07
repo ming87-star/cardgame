@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource("1")
-id = "yukbak"
-card_name = "육박(肉薄)"
-description = "몸으로 파고든다. 한 칸 나아가고 기세를 얻는다."
+id = "ilgal"
+card_name = "일갈(一喝)"
+description = "한 번의 호통. 다음 턴 모든 적이 다가오지 못하나, 버티고 서서 방어도를 얻는다."
 cost = 1
 card_type = 1
 target_type = 1
-move_lanes = 1
+apply_root = 1

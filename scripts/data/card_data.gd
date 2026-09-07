@@ -34,6 +34,10 @@ enum TargetType { ENEMY, SELF, NONE }
 @export var apply_weak: int = 0
 @export var apply_strength: int = 0
 
+## Turns of 저지: enemies held where they stand, unable to close. Applied to
+## every living enemy, since a shout carries down the whole road.
+@export var apply_root: int = 0
+
 func get_display_description() -> String:
 	if not description.is_empty():
 		return description

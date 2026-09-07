@@ -12,6 +12,8 @@ const MOVE_TYPE_WEAKEN := "weaken"
 ## Not authored in `moves`: substituted at runtime when an enemy wants to
 ## attack but is still too far up the road to reach.
 const MOVE_TYPE_ADVANCE := "advance"
+## Also runtime-only: an enemy that wanted to close but has been shouted down.
+const MOVE_TYPE_ROOTED := "rooted"
 
 ## How close an enemy must be for an attack move that doesn't state its own
 ## `range`. Most things on this road have to be next to you to hurt you.

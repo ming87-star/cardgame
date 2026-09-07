@@ -3,7 +3,7 @@ class_name StatIcon
 
 ## Small flat vector icon so status effects and enemy intent read as shapes,
 ## not just numbers -- no image assets needed.
-enum Kind { BLOCK, WEAK, VULNERABLE, STRENGTH, ATTACK, BUFF, WEAKEN, ADVANCE, AIM }
+enum Kind { BLOCK, WEAK, VULNERABLE, STRENGTH, ATTACK, BUFF, WEAKEN, ADVANCE, AIM, ROOT }
 
 @export var kind: Kind = Kind.BLOCK:
 	set(v):
@@ -30,6 +30,8 @@ func _draw() -> void:
 			_draw_advance()
 		Kind.AIM:
 			_draw_aim()
+		Kind.ROOT:
+			_draw_root()
 
 func _draw_shield() -> void:
 	var w := size.x
@@ -74,6 +76,14 @@ func _draw_advance() -> void:
 		Vector2(w * 0.5, h * 0.88),
 	]), icon_color)
 	draw_rect(Rect2(w * 0.5, h * 0.34, w * 0.45, h * 0.32), icon_color)
+
+## 저지: a barred line the enemy cannot step past.
+func _draw_root() -> void:
+	var w := size.x
+	var h := size.y
+	draw_rect(Rect2(w * 0.42, 0, w * 0.16, h), icon_color)
+	draw_rect(Rect2(w * 0.06, h * 0.30, w * 0.30, h * 0.14), icon_color)
+	draw_rect(Rect2(w * 0.06, h * 0.56, w * 0.30, h * 0.14), icon_color)
 
 ## 선비's 조준 stack: concentric rings, a target held steady.
 func _draw_aim() -> void:

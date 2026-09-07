@@ -22,6 +22,10 @@ const FIGURE_WIDTH := 168.0
 const MAX_MOMENTUM := 3
 const CLEAVE_AT := 2
 
+## Armour a shouted-down enemy digs in for. Without this, 저지 would delete a
+## whole enemy turn for one energy and the road could be held forever.
+const ROOTED_BLOCK := 6
+
 const DAMAGE_COLOR := Color(0.7, 0.16, 0.12)
 const BLOCK_COLOR := Color(0.2, 0.33, 0.5)
 const HEAL_COLOR := Color(0.24, 0.45, 0.26)
@@ -325,6 +329,15 @@ func _resolve_card(card_ui: CardUI, target: EnemyInstance) -> void:
 	if data.apply_strength > 0:
 		player_strength += data.apply_strength
 		_popup(player_figure, "+%d 힘" % data.apply_strength, BLOCK_COLOR)
+	if data.apply_root > 0:
+		# A shout carries down the whole road, so it holds every enemy at once --
+		# except any that shrugged off the last one.
+		for e in enemies:
+			if e.is_alive() and e.can_be_rooted():
+				e.rooted += data.apply_root
+				var panel: EnemyPanelUI = _panel_for(e)
+				if panel:
+					_popup(panel, "저지", BLOCK_COLOR)
 	if data.apply_vulnerable > 0:
 		_apply_status(target, func(e: EnemyInstance) -> void: e.vulnerable += data.apply_vulnerable)
 	if data.apply_weak > 0:
@@ -430,6 +443,16 @@ func _do_enemy_turn() -> void:
 
 		var executed := true
 		match move.get("type", ""):
+			EnemyData.MOVE_TYPE_ROOTED:
+				# Shouted down rather than stopped dead: it plants itself and
+				# braces, so holding the line repeatedly hands the enemy armour.
+				# That is what keeps 일갈 from being a free lock.
+				if panel:
+					await panel.play_pulse()
+				e.block += ROOTED_BLOCK
+				if panel:
+					_popup(panel, "+%d 방어" % ROOTED_BLOCK, BLOCK_COLOR)
+				executed = false # held in place, and its attack is still coming
 			EnemyData.MOVE_TYPE_ADVANCE:
 				var next: int = e.lane - 1
 				if is_lane_free(next, e):
@@ -472,6 +495,11 @@ func _do_enemy_turn() -> void:
 			e.weak -= 1
 		if e.vulnerable > 0:
 			e.vulnerable -= 1
+		if e.rooted > 0:
+			e.rooted -= 1
+			e.root_immune = 1
+		elif e.root_immune > 0:
+			e.root_immune -= 1
 		update_all_ui()
 		if player_hp <= 0:
 			break

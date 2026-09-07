@@ -18,6 +18,18 @@ var move_index: int = 0
 ## who walks up from lane 0.
 var lane: int = 0
 
+## Turns of 저지 remaining: held where it stands and unable to close. It can
+## still swing at anything already within reach.
+var rooted: int = 0
+
+## Set the turn after being shouted down. A second shout won't land on it, so
+## 저지 can never hold the road more than every other turn -- they always get
+## through eventually.
+var root_immune: int = 0
+
+func can_be_rooted() -> bool:
+	return root_immune <= 0
+
 func _init(p_data: EnemyData, p_display_name: String) -> void:
 	data = p_data
 	display_name = p_display_name
@@ -39,4 +51,6 @@ func get_intent(distance: int) -> Dictionary:
 	var reach: int = int(move.get("range", EnemyData.DEFAULT_ATTACK_RANGE))
 	if distance <= reach:
 		return move
+	if rooted > 0:
+		return {"move_name": "저지됨", "type": EnemyData.MOVE_TYPE_ROOTED, "value": 0}
 	return {"move_name": "다가온다", "type": EnemyData.MOVE_TYPE_ADVANCE, "value": 1}

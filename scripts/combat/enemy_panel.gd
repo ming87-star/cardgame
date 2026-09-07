@@ -44,6 +44,7 @@ func update_display() -> void:
 		[StatIcon.Kind.WEAK, enemy.weak, StatusBadges.WEAK_COLOR],
 		[StatIcon.Kind.VULNERABLE, enemy.vulnerable, StatusBadges.VULNERABLE_COLOR],
 		[StatIcon.Kind.STRENGTH, enemy.strength, StatusBadges.STRENGTH_COLOR],
+		[StatIcon.Kind.ROOT, enemy.rooted, StatusBadges.ROOT_COLOR],
 	])
 
 	if not enemy.is_alive():
@@ -78,6 +79,9 @@ func update_display() -> void:
 		EnemyData.MOVE_TYPE_ADVANCE:
 			intent_icon.kind = StatIcon.Kind.ADVANCE
 			intent_value_label.text = "접근"
+		EnemyData.MOVE_TYPE_ROOTED:
+			intent_icon.kind = StatIcon.Kind.ROOT
+			intent_value_label.text = "저지"
 
 ## Drag-time affordance. REST = not a legal drop, TARGET = droppable here,
 ## AFFECTED = this card hits every enemy, including this one, wherever it lands.

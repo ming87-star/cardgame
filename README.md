@@ -143,6 +143,25 @@ comparable scale from the same 168x290 figure slot (`PlayerFigure.tscn` and
   for the future map: a node will name its own background instead of rolling
   one at random.
 
+### 저지 and holding the road
+
+Both enemies here have to be adjacent to swing, so left alone they simply walk
+at the player every turn. Retreating answers that but is a treadmill: a card
+and an action spent undoing something the enemy got for free. 일갈(一喝) is the
+card-positive answer — one shout, and every enemy that is still closing is held
+where it stands for a turn.
+
+Two things stop it becoming a permanent lock, both learned from measuring:
+
+- A shouted-down enemy **braces and gains block** rather than losing its turn
+  outright, so spamming it armours the people you are trying to shoot.
+- An enemy that has just been held is **immune to the next shout**, capping
+  uptime at every other turn. They always get through eventually.
+
+It also matters that 일갈 does not move the player, so it keeps 조준 alive where
+물러섬 resets it. That is the actual decision the card exists to create: hold
+the line and keep your aim, or give ground and start again.
+
 ### Targeting
 
 Cards are dropped on whoever they affect, and the drag itself explains where

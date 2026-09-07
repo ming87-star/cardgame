@@ -6,9 +6,8 @@
 script = ExtResource("1")
 id = "mulleoseom"
 card_name = "물러섬"
-description = "발을 빼며 간격을 되찾는다. 한 칸 물러서고 방어도 4를 얻는다."
-cost = 0
+description = "발을 빼며 간격을 되찾는다. 한 칸 물러선다. 물러설 곳이 없으면 앞의 적을 밀어낸다."
+cost = 1
 card_type = 1
 target_type = 1
 move_lanes = -1
-block = 4
